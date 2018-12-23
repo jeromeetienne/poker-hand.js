@@ -1,6 +1,6 @@
-import Card from './card.js'
-import Deck from './deck.js'
-import Hand from './hand.js'
+import Card from './core/card.js'
+import Deck from './core/deck.js'
+import Hand from './core/hand.js'
 
 import Utils from './extras/utils.js'
 import Montecarlo from './extras/montecarlo.js'

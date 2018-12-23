@@ -14,5 +14,8 @@
     "build-cjs": "rollup ./src/index.js --file build/poker-hand.mjs --format cjs"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "simple-statistics": "^6.1.1"
+  }  
 }
