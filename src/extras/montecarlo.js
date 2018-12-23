@@ -1,4 +1,4 @@
-import Hand from '../hand.js'
+import Hand from '../core/hand.js'
 import Utils from './utils.js'
 
 
