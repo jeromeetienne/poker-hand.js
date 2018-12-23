@@ -1,0 +1,79 @@
+.card {
+	background-color: #eee;
+	border: solid 2px;
+	position: relative;
+	border-radius: 20px;
+	width: 100px;
+	height: 160px;
+	margin: 10px;
+	display: inline-block;
+	text-align: center;
+}
+
+.card:hover {
+	background-color: #ccc;
+}
+
+.card .denomination {
+	top: 10px;
+	font-weight: bolder;
+	font-family: arial;
+	position: absolute;
+	font-size: 400%;
+	width: 100%;
+}
+
+.card .suit {
+	bottom: 10px;
+	font-weight: bolder;
+	font-family: arial;
+	position: absolute;
+	font-size: 450%;
+	width: 100%;
+
+}
+
+#cardSelectionID {
+	position: absolute;
+	top: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: green;
+}
+#cardSelectionID .denominationSelection div {
+	background-color: #eee;
+	border: solid 2px;
+	position: relative;
+	width: 100px;
+	height: 100px;
+	margin: 10px;
+	display: inline-block;
+
+
+	border-radius: 10px;
+	font-size: 450%;
+	    font-weight: bolder;
+	    text-align: center;
+}
+#cardSelectionID .suitSelection div {
+	background-color: #eee;
+	border: solid 2px;
+	border-color: black;
+	position: relative;
+	width: 100px;
+	height: 100px;
+	margin: 10px;
+	display: inline-block;
+
+	border-radius: 10px;
+	font-size: 450%;
+	    font-weight: bolder;
+	    text-align: center;
+}
+
+#cardSelectionID [data-card-denomination].selected {
+	background-color: #aaa;
+}
+#cardSelectionID [data-card-suit].selected {
+	background-color: #aaa;
+}

@@ -1,0 +1,59 @@
+<style>
+	body {
+		background-color: green;
+		margin: 0px;
+		user-select: none;
+		font-family: arial;
+	}
+</style>
+<link rel="stylesheet" href="css/card-ui.css"/>
+
+<body>
+	<h2>Basic Demo Cards</h2>
+	<div id='CardsID'></div>
+
+
+	<!-- html for card selection -->
+	<div id='cardSelectionID' style='display: none'>
+		<div class='denominationSelection'>
+			<div data-card-denomination='2'>2</div>
+			<div data-card-denomination='3'>3</div>
+			<div data-card-denomination='4'>4</div>
+			<div data-card-denomination='5'>5</div>
+			<div data-card-denomination='6'>6</div>
+			<div data-card-denomination='7'>7</div>
+			<div data-card-denomination='8'>8</div>
+			<div data-card-denomination='9'>9</div>
+			<div data-card-denomination='T'>10</div>
+			<div data-card-denomination='J'>J</div>
+			<div data-card-denomination='Q'>Q</div>
+			<div data-card-denomination='K'>K</div>
+			<div data-card-denomination='A'>A</div>
+			<div data-card-denomination=' '>&nbsp;</div>
+		</div>
+		<div class='suitSelection'>
+			<div data-card-suit='s'>♠</div>
+			<div data-card-suit='h' style='color:red'>♥</div>
+			<div data-card-suit='c'>♣</div>
+			<div data-card-suit='d' style='color:red'>♦</div>
+		</div>
+	</div>
+
+</body>
+<script type='module'>
+	import PokerHand from '../src/index.js'
+
+
+	['  ', '  ', '  ', '  ', '  '].forEach((cardValue) => {
+		var cardDomElement = PokerHand.CardDomElement.create(cardValue)
+		document.querySelector('#CardsID').appendChild(cardDomElement)
+		cardDomElement.addEventListener('click', function () {
+			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
+				// update cardDomElement cardValue
+				cardDomElement.dataset.cardValue = newCardSelected
+				PokerHand.CardDomElement.update(cardDomElement)
+				console.log('newCardSelected', newCardSelected)
+			})
+		})
+	});
+</script>

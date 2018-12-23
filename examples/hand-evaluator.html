@@ -1,0 +1,153 @@
+<style>
+	body {
+		background-color: green;
+		margin: 0px;
+		user-select: none;
+		font-family: arial;
+	}
+</style>
+<link rel="stylesheet" href="css/card-ui.css"/>
+
+<body>
+	<h2>likelyHoodToWin: <span id='likelyHoodToWinID'>?</span></h2>
+	<h2>likelyHoodRounds: <span id='likelyHoodRoundsID'>?</span></h2>
+	<h2>Community Cards</h2>
+	<div id='communityCardsID'></div>
+	<h2>Hole Cards</h2>
+	<div id='holeCardsID'></div>
+	<h2>Parameters</h2>
+	<label>
+		n other players:
+		<input type="number" id="nOtherPlayersID" min='2' max='22' value='2'>
+	</label>
+
+
+	<!-- html for card selection -->
+	<div id='cardSelectionID' style='display: none'>
+		<div class='denominationSelection'>
+			<div data-card-denomination='2'>2</div>
+			<div data-card-denomination='3'>3</div>
+			<div data-card-denomination='4'>4</div>
+			<div data-card-denomination='5'>5</div>
+			<div data-card-denomination='6'>6</div>
+			<div data-card-denomination='7'>7</div>
+			<div data-card-denomination='8'>8</div>
+			<div data-card-denomination='9'>9</div>
+			<div data-card-denomination='T'>10</div>
+			<div data-card-denomination='J'>J</div>
+			<div data-card-denomination='Q'>Q</div>
+			<div data-card-denomination='K'>K</div>
+			<div data-card-denomination='A'>A</div>
+			<div data-card-denomination=' '>&nbsp;</div>
+		</div>
+		<div class='suitSelection'>
+			<div data-card-suit='s'>♠</div>
+			<div data-card-suit='h' style='color:red'>♥</div>
+			<div data-card-suit='c'>♣</div>
+			<div data-card-suit='d' style='color:red'>♦</div>
+		</div>
+	</div>
+
+</body>
+<script type='module'>
+	import PokerHand from '../src/index.js'
+
+
+	['  ', '  ', '  ', '  ', '  '].forEach((cardValue) => {
+		var cardDomElement = PokerHand.CardDomElement.create(cardValue)
+		document.querySelector('#communityCardsID').appendChild(cardDomElement)
+		cardDomElement.addEventListener('click', function () {
+			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
+				cardDomElement.dataset.cardValue = newCardSelected
+				console.log('newCardSelected', newCardSelected)
+				PokerHand.CardDomElement.update(cardDomElement)
+				onHandChange()
+			})
+		})
+	});
+	['  ', '  '].forEach((cardValue) => {
+		var cardDomElement = PokerHand.CardDomElement.create(cardValue)
+		document.querySelector('#holeCardsID').appendChild(cardDomElement)
+		cardDomElement.addEventListener('click', function () {
+			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
+				cardDomElement.dataset.cardValue = newCardSelected
+				console.log('newCardSelected', newCardSelected)
+				PokerHand.CardDomElement.update(cardDomElement)
+				onHandChange()
+			})
+		})
+	})
+
+	document.querySelector('#nOtherPlayersID').addEventListener('change', function () {
+		onHandChange()
+	})
+
+	////////////////////////////////////////////////////////////////////////
+	//		Code
+	////////////////////////////////////////////////////////////////////////
+
+	function onHandChange() {
+		resetLikelyHood()
+		displayLikelyHood()
+	}
+
+	setInterval(function () {
+		computeLikelyHood()
+	}, 1000 / 20)
+
+
+	function resetLikelyHood() {
+		bestLikelyHoodToWin = 0
+		bestLikelyHoodNRounds = 0
+	}
+	function displayLikelyHood() {
+		if (bestLikelyHoodNRounds === 0) {
+			document.querySelector('#likelyHoodToWinID').innerHTML = '?'
+			document.querySelector('#likelyHoodRoundsID').innerHTML = '?'
+		} else {
+			document.querySelector('#likelyHoodToWinID').innerHTML = (bestLikelyHoodToWin * 100).toFixed(2) + '%'
+			document.querySelector('#likelyHoodRoundsID').innerHTML = bestLikelyHoodNRounds
+		}
+	}
+
+	let bestLikelyHoodToWin = 0
+	let bestLikelyHoodNRounds = 0
+	let bestLikelyHoodStepRounds = 50
+	let bestLikelyHoodMaxNRounds = 10000
+	function computeLikelyHood() {
+		if (bestLikelyHoodNRounds >= bestLikelyHoodMaxNRounds) return
+
+
+		let holeCards = Array.from(document.querySelectorAll('#holeCardsID .card'))
+			.filter((domElement) => domElement.dataset.cardValue !== '  ')
+			.map((domElement) => domElement.dataset.cardValue)
+		let communityCards = Array.from(document.querySelectorAll('#communityCardsID .card'))
+			.filter((domElement) => domElement.dataset.cardValue !== '  ')
+			.map((domElement) => domElement.dataset.cardValue)
+		let nbOtherPlayers = document.querySelector('#nOtherPlayersID').value
+
+		if (holeCards.length < 2) {
+			// console.log('not enougth holeCards')
+			return
+		}
+
+		console.time('simulateMultipleRound')
+		let likelyHoodToWin = PokerHand.Montecarlo.simulateMultipleRound(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
+		console.timeEnd('simulateMultipleRound')
+		console.log('likelyHoodtoWin', likelyHoodToWin)
+
+
+		if (bestLikelyHoodNRounds === 0) {
+			console.log('init bestLikelyHoodToWin')
+			bestLikelyHoodToWin = likelyHoodToWin
+			bestLikelyHoodNRounds = bestLikelyHoodStepRounds
+		} else {
+			bestLikelyHoodToWin = ((bestLikelyHoodToWin * bestLikelyHoodNRounds) + (likelyHoodToWin * bestLikelyHoodStepRounds))
+				/
+				(bestLikelyHoodNRounds + bestLikelyHoodStepRounds)
+			bestLikelyHoodNRounds += bestLikelyHoodStepRounds
+		}
+
+		displayLikelyHood()
+	}
+</script>

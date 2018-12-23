@@ -1,0 +1,95 @@
+<script type='module'>
+	import hoyle from "../src/index.js"
+
+	var deck = new hoyle.Deck()
+	deck.shuffle()
+	console.log(deck.toArray())
+
+	////////////////////////////////////////////////////////////////////////
+	//		Code
+	////////////////////////////////////////////////////////////////////////
+
+	let holeCards = ['7c', '2s']
+	let communityCards = ['3h', '9d', '3c']
+	let nbOtherPlayers = 2
+
+	// deck.removeCards(holeCards)
+	// deck.removeCards(communityCards)
+
+	// console.log(`holeCards ${holeCards}`)
+	// console.log(`communityCards ${communityCards}`)
+
+	const outCardsSet = new Set();
+
+	let firstHand = hoyle.Hand.make(holeCards.concat(communityCards))
+	console.log(`firstHand ${firstHand} name ${firstHand.name} rank ${firstHand.rank}`)
+
+	let nSimulations = 1000
+	for (let i = 0; i < nSimulations; i++) {
+		let randomCard = pickUnusedCards(1, holeCards.concat(communityCards))
+		// console.log(`draw cards ${randomCard}`)
+		let newCommunityCards = communityCards.concat(randomCard)
+
+		// console.log(`newCommunityCards ${newCommunityCards}`)
+
+		let finalHand = hoyle.Hand.make(holeCards.concat(newCommunityCards))
+		// let communityHand = hoyle.Hand.make(newCommunityCards)
+		// console.log(`finalHand ${finalHand} name ${finalHand.name} rank ${finalHand.rank}`)
+		// console.log(`communityHand ${communityHand} name ${communityHand.name} rank ${communityHand.rank}`)
+
+		if (firstHand.rank < finalHand.rank && finalHand.name.indexOf('pair') === -1 ) {
+			// console.log(`${randomCard} IS an out`)
+			outCardsSet.add(randomCard.toString())
+		} else {
+			// console.log(`${randomCard} IS NOT an out`)
+		}
+	}
+
+	let outCards = Array.from(outCardsSet).sort()
+	console.log(`nOuts ${outCards.length} outCards ${outCards}`)
+
+	/**
+	 * - the goal is to count the cards which improve your hands
+	 * - First get a list of all cards which improve your hands
+	 * - works IIF communityCards.length >= 3
+	 */
+
+	/**
+	* - hoyle seems to force the cards === 5... how to work around that
+	*   - i want to be able to have the result on partial hand
+	*   - possibility 1: add fake cards up to 5 cards
+	*   - possibility 2: modify its code - but then i
+	* - hoyle/binion/machinePoker are all in coffeescript :(
+	*   - i am not a fan of forking...
+	*   - but the library is small and well coded
+	*   - it is node.js only - due to require() and due to dependancy on npm packages
+	* - port all this code... seems a lot of work... giving me nothing but better maintenance
+	* - do i need to port every repository ?
+	*   - is hoyle enouth ? this one is super small
+	*/
+
+
+	////////////////////////////////////////////////////////////////////////
+	//		Utils to generate random cards from a deck
+	////////////////////////////////////////////////////////////////////////
+
+	function pickRandomCard() {
+		var SUITS = ['s', 'h', 'c', 'd']
+		var VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+		var cardValue = VALUES[Math.floor(Math.random() * VALUES.length)]
+		var cardSuit = SUITS[Math.floor(Math.random() * SUITS.length)]
+		var card = cardValue + cardSuit
+		return card
+	}
+
+	function pickUnusedCards(nbCards, usedCards) {
+		var unusedCards = []
+		while (unusedCards.length !== nbCards) {
+			var randomCard = pickRandomCard()
+			if (usedCards.indexOf(randomCard) !== -1) continue
+			if (unusedCards.indexOf(randomCard) !== -1) continue
+			unusedCards.push(randomCard)
+		}
+		return unusedCards
+	}
+</script>
