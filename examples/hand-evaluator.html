@@ -131,10 +131,10 @@
 			return
 		}
 
-		console.time('simulateMultipleRound')
+		// console.time('simulateMultipleRound')
 		let likelyHoodToWin = PokerHand.Montecarlo.simulateMultipleRound(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
-		console.timeEnd('simulateMultipleRound')
-		console.log('likelyHoodtoWin', likelyHoodToWin)
+		// console.timeEnd('simulateMultipleRound')
+		// console.log('likelyHoodtoWin', likelyHoodToWin)
 
 
 		if (bestLikelyHoodNRounds === 0) {

@@ -6,7 +6,7 @@ var RandBot = require('./bots/randBot')
 var FoldBot = require('./bots/foldBot')
 var botAlwaysAllIn = require('./bots/always-all-in')
 var botCallRandomRaise = require('./bots/call-random-raise.js')
-var botSmartManual = require('./bots/smart-manual.js')
+var botHighPair = require('./bots/high-pair.js')
 var HonestBot = require('./bots/honestBot.js')
 var PokerHandBot = require('./bots/pokerHandBot.js')
 
@@ -18,7 +18,7 @@ var players = [
 	// MachinePoker.seats.JsLocal.create(botAlwaysAllIn),
 	// MachinePoker.seats.JsLocal.create(botCallRandomRaise),
 	MachinePoker.seats.JsLocal.create(HonestBot),
-	// MachinePoker.seats.JsLocal.create(botSmartManual),
+	// MachinePoker.seats.JsLocal.create(botHighPair),
 	// MachinePoker.seats.JsLocal.create(PokerHandBot),
 
 
