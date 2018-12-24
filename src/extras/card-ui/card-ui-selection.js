@@ -1,3 +1,8 @@
+/**
+ * - it requires a css and html part too
+ * @param {*} currentCard 
+ * @param {*} onSelected 
+ */
 function cardSelectionStart(currentCard, onSelected) {
 	showSelector()
 	addEventListeners()

@@ -1,5 +1,5 @@
 // import {myBundle} from "../tmp/bundle.mjs"
-let hoyle = require('../build/poker-hand.js')
+let hoyle = require('../build/poker-hand.mjs')
 
 
 var deck = new hoyle.Deck()

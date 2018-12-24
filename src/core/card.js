@@ -1,4 +1,8 @@
 class Card {
+	////////////////////////////////////////////////////////////////////////
+	//		obsolete
+	////////////////////////////////////////////////////////////////////////
+	
 	constructor(str) {
 		this.value = str.substr(0, 1);
 		this.suit = str.substr(1, 1).toLowerCase();
@@ -16,9 +20,11 @@ class Card {
 			return `${this.value}${this.suit}`;
 		}
 	}
+
 }
 Card.SUITS = ['s', 'h', 'c', 'd']
 Card.DENOMINATIONS = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
+
 
 Card.VALUES = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 Card.sort = function (a, b) {
