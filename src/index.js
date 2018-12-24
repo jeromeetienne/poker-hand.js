@@ -6,6 +6,7 @@ import Hand2 from './core/hand2.js'
 
 import Utils from './extras/utils.js'
 import Montecarlo from './extras/montecarlo.js'
+import Montecarlo2 from './extras/montecarlo2.js'
 import CardDomElement from './extras/card-ui/card-dom-element.js'
 import CardUISelection from './extras/card-ui/card-ui-selection.js'
 
@@ -20,6 +21,7 @@ export default {
 
 	Utils,
 	Montecarlo,
+	Montecarlo2,
 
 	CardDomElement,
 	CardUISelection,

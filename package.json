@@ -17,5 +17,5 @@
   "license": "MIT",
   "dependencies": {
     "simple-statistics": "^6.1.1"
-  }  
+  }
 }

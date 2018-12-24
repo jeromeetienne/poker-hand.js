@@ -6,7 +6,7 @@ let communityCards = []
 let nbOtherPlayers = 2
 
 console.time('simulateMultipleRound')
-var handLikelyHoodToWin = PokerHand.Montecarlo.simulateMultipleRound(500, holeCards, communityCards, nbOtherPlayers)
+var handLikelyHoodToWin = PokerHand.Montecarlo2.simulateMultipleRound(5000, holeCards, communityCards, nbOtherPlayers)
 console.timeEnd('simulateMultipleRound')
 console.log('handLikelyHoodtoWin', handLikelyHoodToWin)
 

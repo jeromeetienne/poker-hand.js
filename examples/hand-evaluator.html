@@ -112,7 +112,7 @@
 
 	let bestLikelyHoodToWin = 0
 	let bestLikelyHoodNRounds = 0
-	let bestLikelyHoodStepRounds = 50
+	let bestLikelyHoodStepRounds = 100
 	let bestLikelyHoodMaxNRounds = 10000
 	function computeLikelyHood() {
 		if (bestLikelyHoodNRounds >= bestLikelyHoodMaxNRounds) return
@@ -132,7 +132,7 @@
 		}
 
 		// console.time('simulateMultipleRound')
-		let likelyHoodToWin = PokerHand.Montecarlo.simulateMultipleRound(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
+		let likelyHoodToWin = PokerHand.Montecarlo2.simulateMultipleRound(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
 		// console.timeEnd('simulateMultipleRound')
 		// console.log('likelyHoodtoWin', likelyHoodToWin)
 
