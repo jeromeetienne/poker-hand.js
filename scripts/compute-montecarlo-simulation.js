@@ -6,6 +6,6 @@ let communityCards = []
 let nbOtherPlayers = 2
 
 console.time('simulateOddsIfAllIn')
-var handLikelyHoodToWin = PokerHand.MonteCarlo.simulateOddsIfAllIn(5000, holeCards, communityCards, nbOtherPlayers)
+var oddsIfAllIn = PokerHand.MonteCarlo.simulateOddsIfAllIn(5000, holeCards, communityCards, nbOtherPlayers)
 console.timeEnd('simulateOddsIfAllIn')
-console.log('handLikelyHoodtoWin', handLikelyHoodToWin)
+console.log('oddsIfAllIn', oddsIfAllIn)

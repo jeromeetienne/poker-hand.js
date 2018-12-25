@@ -2,8 +2,15 @@
   - https://www.cardschat.com/odds-for-dummies.php
   - require current pot amount + callAmount
   - simply add 2 input number for the moment
-  - that with the 
-- rename likelyhoodToWin to oddsIfAllIn ?
+- find a better name - poker-hand.js
+  - poker-hand.js is not representative, it is boring
+  - poker-analyst.js ?
+- retire machine-poker-bot
+  - make a bot using poker-hand.js
+
+
+---
+- DONE rename likelyhoodToWin to oddsIfAllIn ?
   - way more descriptive
   - PokerHand.MonteCarlo.simulateOddsIfAllIn => PokerHand.MonteCarlo.simulateOddsIfAllIn()
   - rename all the variables name
@@ -15,8 +22,3 @@
   - create a { handName: handRank } object
   - Hand.HandRanks['Flush'] = 4
   - in this select, add a 'better hand' special case
-- find a better name - poker-hand.js
-  - poker-hand.js is not representative, it is boring
-  - poker-analyst.js ?
-- retire machine-poker-bot
-  - make a bot using poker-hand.js

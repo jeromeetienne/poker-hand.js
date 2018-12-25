@@ -10,8 +10,8 @@
 
 <body>
 	<h2>Hand name <span id='myHandNameID'>?</span></h2>
-	<h2>likelyHoodToWin: <span id='likelyHoodToWinID'>?</span></h2>
-	<h2>likelyHoodRounds: <span id='likelyHoodRoundsID'>?</span></h2>
+	<h2>oddsIfAllInValue: <span id='oddsIfAllInValueID'>?</span></h2>
+	<h2>oddsIfAllInRounds: <span id='oddsIfAllInRoundsID'>?</span></h2>
 	<h2>Outs: count <span id='nOutsID'>?</span> - cards <span id='OutCardsID'>?</span></h2>
 	<div>requiredHandRank
 		<select id="outsRequiredHandRankID"></select>
@@ -93,8 +93,8 @@
 	////////////////////////////////////////////////////////////////////////
 
 	function onHandChange() {
-		resetLikelyHood()
-		displayLikelyHood()
+		resetOddsIfAllIn()
+		displayOddsIfAllIn()
 		displayOuts()
 		displayMyHandName()
 	}
@@ -186,34 +186,34 @@
 	}
 
 	////////////////////////////////////////////////////////////////////////
-	//		Handle LikelyhoodToWin
+	//		Handle OddsIfAllIn
 	////////////////////////////////////////////////////////////////////////
 
 	setInterval(function () {
-		computeLikelyHood()
+		computeOddsIfAllIn()
 	}, 1000 / 30)
 
 
-	function resetLikelyHood() {
-		bestLikelyHoodToWin = 0
-		bestLikelyHoodNRounds = 0
+	function resetOddsIfAllIn() {
+		bestOddsIfAllInValue = 0
+		bestOddsIfAllInNRounds = 0
 	}
-	function displayLikelyHood() {
-		if (bestLikelyHoodNRounds === 0) {
-			document.querySelector('#likelyHoodToWinID').innerHTML = '?'
-			document.querySelector('#likelyHoodRoundsID').innerHTML = '?'
+	function displayOddsIfAllIn() {
+		if (bestOddsIfAllInNRounds === 0) {
+			document.querySelector('#oddsIfAllInValueID').innerHTML = '?'
+			document.querySelector('#oddsIfAllInRoundsID').innerHTML = '?'
 		} else {
-			document.querySelector('#likelyHoodToWinID').innerHTML = (bestLikelyHoodToWin * 100).toFixed(2) + '%'
-			document.querySelector('#likelyHoodRoundsID').innerHTML = bestLikelyHoodNRounds
+			document.querySelector('#oddsIfAllInValueID').innerHTML = (bestOddsIfAllInValue * 100).toFixed(2) + '%'
+			document.querySelector('#oddsIfAllInRoundsID').innerHTML = bestOddsIfAllInNRounds
 		}
 	}
 
-	let bestLikelyHoodToWin = 0
-	let bestLikelyHoodNRounds = 0
-	let bestLikelyHoodStepRounds = 50
-	let bestLikelyHoodMaxNRounds = 10000
-	function computeLikelyHood() {
-		if (bestLikelyHoodNRounds >= bestLikelyHoodMaxNRounds) return
+	let bestOddsIfAllInValue = 0
+	let bestOddsIfAllInNRounds = 0
+	let bestOddsIfAllInStepRounds = 50
+	let bestOddsIfAllInMaxNRounds = 10000
+	function computeOddsIfAllIn() {
+		if (bestOddsIfAllInNRounds >= bestOddsIfAllInMaxNRounds) return
 
 
 		let holeCards = Array.from(document.querySelectorAll('#holeCardsID .card'))
@@ -230,22 +230,22 @@
 		}
 
 		// console.time('simulateOddsIfAllIn')
-		let likelyHoodToWin = PokerHand.MonteCarlo.simulateOddsIfAllIn(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
+		let oddsIfAllInValue = PokerHand.MonteCarlo.simulateOddsIfAllIn(bestOddsIfAllInStepRounds, holeCards, communityCards, nbOtherPlayers)
 		// console.timeEnd('simulateOddsIfAllIn')
-		// console.log('likelyHoodtoWin', likelyHoodToWin)
+		// console.log('oddsIfAllInValue', oddsIfAllInValue)
 
 
-		if (bestLikelyHoodNRounds === 0) {
-			console.log('init bestLikelyHoodToWin')
-			bestLikelyHoodToWin = likelyHoodToWin
-			bestLikelyHoodNRounds = bestLikelyHoodStepRounds
+		if (bestOddsIfAllInNRounds === 0) {
+			console.log('init bestOddsIfAllInValue')
+			bestOddsIfAllInValue = oddsIfAllInValue
+			bestOddsIfAllInNRounds = bestOddsIfAllInStepRounds
 		} else {
-			bestLikelyHoodToWin = ((bestLikelyHoodToWin * bestLikelyHoodNRounds) + (likelyHoodToWin * bestLikelyHoodStepRounds))
+			bestOddsIfAllInValue = ((bestOddsIfAllInValue * bestOddsIfAllInNRounds) + (oddsIfAllInValue * bestOddsIfAllInStepRounds))
 				/
-				(bestLikelyHoodNRounds + bestLikelyHoodStepRounds)
-			bestLikelyHoodNRounds += bestLikelyHoodStepRounds
+				(bestOddsIfAllInNRounds + bestOddsIfAllInStepRounds)
+			bestOddsIfAllInNRounds += bestOddsIfAllInStepRounds
 		}
 
-		displayLikelyHood()
+		displayOddsIfAllIn()
 	}
 </script>
