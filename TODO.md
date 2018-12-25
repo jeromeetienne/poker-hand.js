@@ -1,5 +1,22 @@
-- find a better name
-  - poker-analyst.js
+- in hand-evaluator, display requiredHandRank
+  - like of possible hand name in a input select
+  - create a { handName: handRank } object
+  - Hand2.HandRanks['Flush'] = 4
+  - in this select, add a 'better hand' special case
+- display poker odds
+  - https://www.cardschat.com/odds-for-dummies.php
+  - require current pot amount + callAmount
+  - simply add 2 input number for the moment
+  - that with the 
+- rename likelyhoodToWin to oddsIfAllIn ?
+  - way more descriptive
+  - PokerHand.Montecarlo2.simulateMultipleRound => PokerHand.Montecarlo2.simulateOddsIfAllIn()
+  - rename all the variables name
+- rename
+  - rename PokerHand.MonteCarlo. without 2
+  - PokerHand.Montecarlo2.computeOuts => PokerHand.Montecarlo2.simulateOutsCount()
+- find a better name - poker-hand.js
+  - poker-hand.js is not representative, it is boring
+  - poker-analyst.js ?
 - retire machine-poker-bot
   - make a bot using poker-hand.js
-  

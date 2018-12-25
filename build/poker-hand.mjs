@@ -487,21 +487,26 @@ class Hand$1 {
 
 	compare(otherHand) {
 		// if the rank is different
-		if (this.rank < otherHand.rank) {
+		if (this.handRank < otherHand.handRank) {
 			return 1;
-		} else if (this.rank > otherHand.rank) {
+		} else if (this.handRank > otherHand.handRank) {
 			return -1;
 		}
 		// highest card.rank if hand.rank is the same
 		for (let cardIndex = 0; cardIndex <= 4; cardIndex++) {
-			if (Card2.getRank(this.cards[cardIndex]) < Card2.getRank(otherHand.cards[cardIndex])) {
+			if (Card2.getRank(this.fullCards[cardIndex]) < Card2.getRank(otherHand.fullCards[cardIndex])) {
 				return 1
-			} else if (Card2.getRank(this.cards[cardIndex]) > Card2.getRank(otherHand.cards[cardIndex])) {
+			} else if (Card2.getRank(this.fullCards[cardIndex]) > Card2.getRank(otherHand.fullCards[cardIndex])) {
 				return -1
 			}
 		}
 		// if both hands are equalt
 		return 0
+	}
+
+	static make(cardPool, doNotEvaluate){
+		let hand = new Hand$1(cardPool, doNotEvaluate);
+		return hand
 	}
 
 	beats(otherHand) {
@@ -547,9 +552,9 @@ class Hand$1 {
 Hand$1.pickWinners = function (hands) {
 	// Find highest ranked hands
 	// reject any that lose another hand
-	const byRank = hands.map(h => h.rank);
+	const byRank = hands.map(h => h.handRank);
 	const highestRank = Math.max.apply(Math, byRank);
-	hands = hands.filter(h => h.rank === highestRank);
+	hands = hands.filter(h => h.handRank === highestRank);
 	hands = hands.filter(function (h) {
 		let loses = false;
 		for (let hand of Array.from(hands)) {
@@ -936,6 +941,39 @@ var Montecarlo = {
 	simulateMultipleRound
 };
 
+function computeOuts(holeCards, communityCards, requiredHandRank, nSimulations) {
+	const outCardsSet = new Set();
+
+	console.assert(holeCards.length === 2);
+	console.assert(communityCards.length >= 0);
+
+	for (let i = 0; i < nSimulations; i++) {
+		let randomCard = Utils.pickUnusedCards(1, holeCards.concat(communityCards));
+		// console.log(`draw cards ${randomCard}`)
+		let newCommunityCards = communityCards.concat(randomCard);
+
+		// console.log(`newCommunityCards ${newCommunityCards}`)
+
+		let finalHand = Hand$1.make(holeCards.concat(newCommunityCards));
+		// let communityHand = PokerHand.Hand.make(newCommunityCards)
+		// console.log(`finalHand ${finalHand.minimalCards} name ${finalHand.handName} rank ${finalHand.handRank}`)
+		// console.log(`communityHand ${communityHand} name ${communityHand.handName} rank ${communityHand.handRank}`)
+
+		let involvedMyHoleCards = finalHand.minimalCards.indexOf(holeCards[0]) !== -1
+			|| finalHand.minimalCards.indexOf(holeCards[1]) !== -1;
+
+		if (finalHand.handRank >= requiredHandRank && involvedMyHoleCards === true) {
+			// console.log(`${randomCard} IS an out`)
+			outCardsSet.add(randomCard.toString());
+		}
+	}
+
+	let outCards = Array.from(outCardsSet).sort();
+	// console.log(`nOuts ${outCards.length} outCards ${outCards}`)
+	return outCards
+}
+
+
 /**
  * - good link on poker-odd and expected value
  *   https://www.cardschat.com/poker-odds-expected-value.php
@@ -1019,7 +1057,8 @@ function simulateOneRound$1(holeCards, communityCards, nbOtherPlayers) {
 ////////////////////////////////////////////////////////////////////////
 
 var Montecarlo2 = {
-	simulateMultipleRound: simulateMultipleRound$1
+	simulateMultipleRound: simulateMultipleRound$1,
+	computeOuts,
 };
 
 class CardDomElement {

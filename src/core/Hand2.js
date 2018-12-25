@@ -127,12 +127,14 @@ class HandEvaluator {
 			// test if this hand is a match
 			let isValid = handTestFunction(hand)
 			if (isValid === false) continue
-			// populate hand.fullCards
+			// populate hand.fullCards if enough cards are available
 			let nextHighestCards = hand.nextHighest(hand.minimalCards)
 			let nextHighestCardsNeeded = Math.max(0, 5 - hand.minimalCards.length)
 			if (nextHighestCards.length >= nextHighestCardsNeeded) {
 				hand.fullCards = hand.minimalCards.concat(nextHighestCards.slice(0, nextHighestCardsNeeded))
 			}
+			// populate hand.handRank
+			hand.handRank = HandEvaluator.HandRanks[hand.handName]
 			// leave the loop
 			break
 		}
@@ -151,7 +153,7 @@ class HandEvaluator {
 			if (isValid === false) continue
 	
 			hand.minimalCards = tmpHand.minimalCards
-			hand.handName = 'Straight Flush';
+			hand.handName = 'StraightFlush';
 			hand.handRank = 8;
 			return true
 		}
@@ -295,6 +297,7 @@ class HandEvaluator {
 	
 }
 
+Hand.HandEvaluator = HandEvaluator
 
 HandEvaluator._handTestFunctions = []
 HandEvaluator._handTestFunctions.push(HandEvaluator._testStraightFlush);
@@ -307,3 +310,14 @@ HandEvaluator._handTestFunctions.push(HandEvaluator._testTwoPair);
 HandEvaluator._handTestFunctions.push(HandEvaluator._testOnePair);
 HandEvaluator._handTestFunctions.push(HandEvaluator._testHighCard);
 
+HandEvaluator.HandRanks = {
+	'StraightFlush' : 8,
+	'FourOfaKind': 7,
+	'FullHouse': 6,
+	'Flush': 5,
+	'Straight': 4,
+	'ThreeOfaKind': 3,
+	'TwoPair': 2,
+	'OnePair': 1,
+	'HighCard': 0,
+}

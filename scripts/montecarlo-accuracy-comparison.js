@@ -12,7 +12,7 @@ let nbOtherPlayers = 2;
 	let results = []
 	for(let i = 0; i < nSimulations; i++){
 		// console.log(`do simulation ${i} with ${nRounds} rounds`)
-		var result = PokerHand.Montecarlo.simulateMultipleRound(nRounds, holeCards, communityCards, nbOtherPlayers)
+		var result = PokerHand.Montecarlo2.simulateMultipleRound(nRounds, holeCards, communityCards, nbOtherPlayers)
 		results.push(result)
 	}
 	

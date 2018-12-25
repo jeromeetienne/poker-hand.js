@@ -6,11 +6,16 @@
 		font-family: arial;
 	}
 </style>
-<link rel="stylesheet" href="css/card-ui.css"/>
+<link rel="stylesheet" href="css/card-ui.css" />
 
 <body>
+	<h2>Hand name <span id='myHandNameID'>?</span></h2>
 	<h2>likelyHoodToWin: <span id='likelyHoodToWinID'>?</span></h2>
 	<h2>likelyHoodRounds: <span id='likelyHoodRoundsID'>?</span></h2>
+	<h2>Outs: count <span id='nOutsID'>?</span> - cards <span id='OutCardsID'>?</span></h2>
+	<div>requiredHandRank
+		<select id="outsRequiredHandRankID"></select>
+	</div>
 	<h2>Community Cards</h2>
 	<div id='communityCardsID'></div>
 	<h2>Hole Cards</h2>
@@ -52,6 +57,7 @@
 <script type='module'>
 	import PokerHand from '../src/index.js'
 
+	window.PokerHand = PokerHand;
 
 	['  ', '  ', '  ', '  ', '  '].forEach((cardValue) => {
 		var cardDomElement = PokerHand.CardDomElement.create(cardValue)
@@ -89,7 +95,99 @@
 	function onHandChange() {
 		resetLikelyHood()
 		displayLikelyHood()
+		displayOuts()
+		displayMyHandName()
 	}
+
+	function displayMyHandName(){
+		// get holdCards + communityCards from UI
+		let holeCards = Array.from(document.querySelectorAll('#holeCardsID .card'))
+			.filter((domElement) => domElement.dataset.cardValue !== '  ')
+			.map((domElement) => domElement.dataset.cardValue)
+		let communityCards = Array.from(document.querySelectorAll('#communityCardsID .card'))
+			.filter((domElement) => domElement.dataset.cardValue !== '  ')
+			.map((domElement) => domElement.dataset.cardValue)
+
+		// create myHand
+		let cardsPool = holeCards.concat(communityCards)
+		let myHand = PokerHand.Hand2.make(cardsPool)
+
+		// update UI
+		document.querySelector('#myHandNameID').innerHTML = myHand.handName
+	}
+
+	////////////////////////////////////////////////////////////////////////
+	//		Handle Outs
+	////////////////////////////////////////////////////////////////////////
+
+	// init #outsRequiredHandRankID
+	(function initOutsRequiredHandRankID() {
+		// add 'Better Hand' special case - with a value of -1
+		let htmlContent = `<option value='-1'>Better Hand</option>`
+		let domElement = createElementFromHTML(htmlContent)
+		document.querySelector('#outsRequiredHandRankID').appendChild(domElement)
+
+		// add options for each HandRanks
+		Object.keys(PokerHand.Hand2.HandEvaluator.HandRanks).reverse().forEach((handName) => {
+			let handRank = PokerHand.Hand2.HandEvaluator.HandRanks[handName]
+			let htmlContent = `<option value='${handRank}'>${handName}</option>`
+			let domElement = createElementFromHTML(htmlContent)
+			document.querySelector('#outsRequiredHandRankID').appendChild(domElement)
+		})
+
+		// select 'Better Hand' at first
+		document.querySelector('#outsRequiredHandRankID').value = -1
+		return
+
+		function createElementFromHTML(HtmlContent) {
+			var div = document.createElement('div');
+			div.innerHTML = HtmlContent.trim();
+			return div.firstChild;
+		}
+	})()
+
+	// update displayOuts on #outsRequiredHandRankID change
+	document.querySelector('#outsRequiredHandRankID').addEventListener('change', function () {
+		displayOuts()
+	})
+
+
+	function displayOuts() {
+		document.querySelector('#nOutsID').innerHTML = '?'
+		document.querySelector('#OutCardsID').innerHTML = '?'
+
+		// get holdCards + communityCards from UI
+		let holeCards = Array.from(document.querySelectorAll('#holeCardsID .card'))
+			.filter((domElement) => domElement.dataset.cardValue !== '  ')
+			.map((domElement) => domElement.dataset.cardValue)
+		let communityCards = Array.from(document.querySelectorAll('#communityCardsID .card'))
+			.filter((domElement) => domElement.dataset.cardValue !== '  ')
+			.map((domElement) => domElement.dataset.cardValue)
+
+		// if less than 2 holdCards are defined, return now
+		if (holeCards.length < 2) return
+
+
+		let nSimulations = 1000
+		let firstHand = PokerHand.Hand2.make(holeCards.concat(communityCards))
+		let requiredHandRank = parseInt(document.querySelector('#outsRequiredHandRankID').value)
+		// handle 'Better Hand' special case
+		if (requiredHandRank === -1) {
+			requiredHandRank = firstHand.handRank + 1
+		}
+		console.log(`firstHand ${firstHand.minimalCards} name ${firstHand.handName} rank ${firstHand.handRank}`)
+		console.log('requiredHandRank', requiredHandRank)
+
+
+		let outCards = PokerHand.Montecarlo2.computeOuts(holeCards, communityCards, requiredHandRank, nSimulations)
+		console.log(`nOuts ${outCards.length} outCards ${outCards}`)
+		document.querySelector('#nOutsID').innerHTML = outCards.length
+		document.querySelector('#OutCardsID').innerHTML = outCards
+	}
+
+	////////////////////////////////////////////////////////////////////////
+	//		Handle LikelyhoodToWin
+	////////////////////////////////////////////////////////////////////////
 
 	setInterval(function () {
 		computeLikelyHood()
