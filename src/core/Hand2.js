@@ -53,6 +53,11 @@ class Hand {
 		return 0
 	}
 
+	static make(cardPool, doNotEvaluate){
+		let hand = new Hand(cardPool, doNotEvaluate)
+		return hand
+	}
+
 	beats(otherHand) {
 		const result = this.compare(otherHand);
 		if (result < 0) {
