@@ -110,7 +110,7 @@
 
 		// create myHand
 		let cardsPool = holeCards.concat(communityCards)
-		let myHand = PokerHand.Hand2.make(cardsPool)
+		let myHand = PokerHand.Hand.make(cardsPool)
 
 		// update UI
 		document.querySelector('#myHandNameID').innerHTML = myHand.handName
@@ -128,8 +128,8 @@
 		document.querySelector('#outsRequiredHandRankID').appendChild(domElement)
 
 		// add options for each HandRanks
-		Object.keys(PokerHand.Hand2.HandEvaluator.HandRanks).reverse().forEach((handName) => {
-			let handRank = PokerHand.Hand2.HandEvaluator.HandRanks[handName]
+		Object.keys(PokerHand.Hand.HandEvaluator.HandRanks).reverse().forEach((handName) => {
+			let handRank = PokerHand.Hand.HandEvaluator.HandRanks[handName]
 			let htmlContent = `<option value='${handRank}'>${handName}</option>`
 			let domElement = createElementFromHTML(htmlContent)
 			document.querySelector('#outsRequiredHandRankID').appendChild(domElement)
@@ -169,7 +169,7 @@
 
 
 		let nSimulations = 1000
-		let firstHand = PokerHand.Hand2.make(holeCards.concat(communityCards))
+		let firstHand = PokerHand.Hand.make(holeCards.concat(communityCards))
 		let requiredHandRank = parseInt(document.querySelector('#outsRequiredHandRankID').value)
 		// handle 'Better Hand' special case
 		if (requiredHandRank === -1) {
@@ -179,7 +179,7 @@
 		console.log('requiredHandRank', requiredHandRank)
 
 
-		let outCards = PokerHand.Montecarlo2.computeOuts(holeCards, communityCards, requiredHandRank, nSimulations)
+		let outCards = PokerHand.MonteCarlo.computeOuts(holeCards, communityCards, requiredHandRank, nSimulations)
 		console.log(`nOuts ${outCards.length} outCards ${outCards}`)
 		document.querySelector('#nOutsID').innerHTML = outCards.length
 		document.querySelector('#OutCardsID').innerHTML = outCards
@@ -230,7 +230,7 @@
 		}
 
 		// console.time('simulateMultipleRound')
-		let likelyHoodToWin = PokerHand.Montecarlo.simulateMultipleRound(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
+		let likelyHoodToWin = PokerHand.MonteCarlo.simulateMultipleRound(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
 		// console.timeEnd('simulateMultipleRound')
 		// console.log('likelyHoodtoWin', likelyHoodToWin)
 

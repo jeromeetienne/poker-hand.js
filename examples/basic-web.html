@@ -1,12 +1,8 @@
 <script type='module'>
-	import hoyle from "../src/index.js"
-
-	var deck = new hoyle.Deck()
-	deck.shuffle()
-	console.log(deck.toArray())
+	import PokerHand from "../src/index.js"
 
 	let holeCards = ['Ac', 'As', 'Ah']
-	let firstHand = hoyle.Hand.make(holeCards)
+	let firstHand = PokerHand.Hand.make(holeCards)
 	console.log(firstHand.cards)
 	debugger
 </script>

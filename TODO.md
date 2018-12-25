@@ -10,11 +10,11 @@
   - that with the 
 - rename likelyhoodToWin to oddsIfAllIn ?
   - way more descriptive
-  - PokerHand.Montecarlo2.simulateMultipleRound => PokerHand.Montecarlo2.simulateOddsIfAllIn()
+  - PokerHand.MonteCarlo.simulateMultipleRound => PokerHand.MonteCarlo.simulateOddsIfAllIn()
   - rename all the variables name
 - rename
   - rename PokerHand.MonteCarlo. without 2
-  - PokerHand.Montecarlo2.computeOuts => PokerHand.Montecarlo2.simulateOutsCount()
+  - PokerHand.MonteCarlo.computeOuts => PokerHand.MonteCarlo.simulateOutsCount()
 - find a better name - poker-hand.js
   - poker-hand.js is not representative, it is boring
   - poker-analyst.js ?

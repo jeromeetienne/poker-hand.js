@@ -2,55 +2,64 @@ import Card from './card.js'
 
 class Hand {
 	// Need to take 7 cards, and return a best hand
-	constructor(cards) {
+	constructor(cardPool, doNotEvaluate) {
 		this.cardPool = [];
-		this.cards = [];
 		this.suits = {};
 		this.ranks = [];
-		this.cardPool = cards.map(function (c) {
-			if (typeof c === 'string') {
-				return new Card(c);
-			} else {
-				return c;
-			}
-		});
+		this.cardPool = cardPool.slice()
 		this.cardPool.sort(Card.sort);
 		for (let card of Array.from(this.cardPool)) {
+			let suit = Card.getSuit(card)
+			let rank = Card.getRank(card)
 			// init arrays if needed
-			if (!this.suits[card.suit]) { this.suits[card.suit] = []; }
-			if (!this.ranks[card.rank]) { this.ranks[card.rank] = []; }
+			if (this.suits[suit] === undefined) { this.suits[suit] = []; }
+			if (this.ranks[rank] === undefined) { this.ranks[rank] = []; }
 			// populate arrays
-			this.suits[card.suit].push(card);
-			this.ranks[card.rank].push(card);
+			this.suits[suit].push(card);
+			this.ranks[rank].push(card);
 		}
 		// TODO is this needed??? this seems super weird
 		// - give a compare() with result inverse from standard
 		// - if confirmed, change it
 		this.ranks.reverse();
-		this.isPossible = this.make();
+
+		// values sets by the hand evaluator
+		this.fullCards = null;
+		this.minimalCards = null;
+		this.handName = null
+		this.handRank = null
+
+		if( doNotEvaluate !== true ){
+			HandEvaluator.evaluate(this)
+		}
 	}
 
-	compare(a) {
-		if (this.rank < a.rank) {
+	compare(otherHand) {
+		// if the rank is different
+		if (this.handRank < otherHand.handRank) {
 			return 1;
-		} else if (this.rank > a.rank) {
+		} else if (this.handRank > otherHand.handRank) {
 			return -1;
 		}
-		let result = 0;
-		for (let x = 0; x <= 4; x++) {
-			if (this.cards[x].rank < a.cards[x].rank) {
-				result = 1;
-				break;
-			} else if (this.cards[x].rank > a.cards[x].rank) {
-				result = -1;
-				break;
+		// highest card.rank if hand.rank is the same
+		for (let cardIndex = 0; cardIndex <= 4; cardIndex++) {
+			if (Card.getRank(this.fullCards[cardIndex]) < Card.getRank(otherHand.fullCards[cardIndex])) {
+				return 1
+			} else if (Card.getRank(this.fullCards[cardIndex]) > Card.getRank(otherHand.fullCards[cardIndex])) {
+				return -1
 			}
 		}
-		return result;
+		// if both hands are equalt
+		return 0
 	}
 
-	beats(h) {
-		const result = this.compare(h);
+	static make(cardPool, doNotEvaluate){
+		let hand = new Hand(cardPool, doNotEvaluate)
+		return hand
+	}
+
+	beats(otherHand) {
+		const result = this.compare(otherHand);
 		if (result < 0) {
 			return true;
 		} else {
@@ -58,8 +67,8 @@ class Hand {
 		}
 	}
 
-	losesTo(h) {
-		const result = this.compare(h);
+	losesTo(otherHand) {
+		const result = this.compare(otherHand);
 		if (result > 0) {
 			return true;
 		} else {
@@ -67,33 +76,24 @@ class Hand {
 		}
 	}
 
-	ties(h) {
-		const result = this.compare(h);
+	ties(otherHand) {
+		const result = this.compare(otherHand);
 		if (result === 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-
+	// TODO move that in HandEvaluator
 	nextHighest(excluding) {
-		let picks;
 		if (!excluding) { excluding = []; }
-		excluding = excluding.concat(this.cards);
-		return picks = this.cardPool.filter(function (card) {
+		excluding = excluding.concat(this.fullCards);
+		let picks = this.cardPool.filter(function (card) {
 			if (excluding.indexOf(card) < 0) {
 				return true;
 			}
 		});
-	}
-
-	// Handle a generic high card compare
-	make() { }
-	// Override me
-
-	toString() {
-		const cards = this.cards.map(c => c.toString());
-		return cards.join(',');
+		return picks
 	}
 }
 
@@ -101,9 +101,9 @@ class Hand {
 Hand.pickWinners = function (hands) {
 	// Find highest ranked hands
 	// reject any that lose another hand
-	const byRank = hands.map(h => h.rank);
+	const byRank = hands.map(h => h.handRank);
 	const highestRank = Math.max.apply(Math, byRank);
-	hands = hands.filter(h => h.rank === highestRank);
+	hands = hands.filter(h => h.handRank === highestRank);
 	hands = hands.filter(function (h) {
 		let loses = false;
 		for (let hand of Array.from(hands)) {
@@ -115,233 +115,209 @@ Hand.pickWinners = function (hands) {
 	return hands;
 };
 
-Hand.make = function (cards/*, partialOK === false */) {
-	// Build and return the best hand
-	//
-	const hands = [StraightFlush, FourOfAKind, FullHouse, Flush, Straight,
-		ThreeOfAKind, TwoPair, OnePair, HighCard];
-	let result = null;
-	for (let hand of Array.from(hands)) {
-		result = new hand(cards)
-		// TODO if not partialOK test .isPossible
-		// if partialOK, test .isPartial
-		if (result.isPossible) { break; }
-	}
-	return result;
-};
+export default Hand
 
 ////////////////////////////////////////////////////////////////////////
-//		Code
+//		HandEvaluator
 ////////////////////////////////////////////////////////////////////////
 
-class StraightFlush extends Hand {
-	// TODO put that in a constructor
-	// - isPossible === got a value hand + 5 cards
-	// - isPartial === i got the value hand but not 5 cards
-	// - minimalCards === minimal cards to compose this hand
-	//   - aka if pair, this is the 2 cards which compose the pair
-	//   - aka if set, this is the 3 cards
-	//   - etc...
-	// - write some test for poker-hand.js
-	// - then to know if a new card is an OUT, build a Hand() with those cards
-	//   - it has to be superior rank than the Hand without the new cards
-	//   - the new Hand.minimalCards MUST include at least one selfPlayer's hold cards
-	constructor(cards){
-		super(cards)
-		this.name = 'Straight Flush';
-		this.rank = 8;
+class HandEvaluator {
+	static evaluate( hand ) {
+		for (let handTestFunction of HandEvaluator._handTestFunctions) {
+			// test if this hand is a match
+			let isValid = handTestFunction(hand)
+			if (isValid === false) continue
+			// populate hand.fullCards if enough cards are available
+			let nextHighestCards = hand.nextHighest(hand.minimalCards)
+			let nextHighestCardsNeeded = Math.max(0, 5 - hand.minimalCards.length)
+			if (nextHighestCards.length >= nextHighestCardsNeeded) {
+				hand.fullCards = hand.minimalCards.concat(nextHighestCards.slice(0, nextHighestCardsNeeded))
+			}
+			// populate hand.handRank
+			hand.handRank = HandEvaluator.HandRanks[hand.handName]
+			// leave the loop
+			break
+		}
 	}
-	make() {
-		let cards;
-		let possibleStraight = null;
-		for (let suit in this.suits) {
-			cards = this.suits[suit];
-			if (cards.length >= 5) {
-				possibleStraight = cards;
-				break;
+	////////////////////////////////////////////////////////////////////////
+	//		Code
+	////////////////////////////////////////////////////////////////////////
+	
+	static _testStraightFlush(hand) {
+		for (let suit in hand.suits) {
+			let cards = hand.suits[suit];
+			if (cards.length < 5) continue
+	
+			const tmpHand = new Hand(cards, true);
+			let isValid = HandEvaluator._testStraight(tmpHand)
+			if (isValid === false) continue
+	
+			hand.minimalCards = tmpHand.minimalCards
+			hand.handName = 'StraightFlush';
+			hand.handRank = 8;
+			return true
+		}
+		return false
+	}
+	static _testFourOfaKind(hand) {
+		for (let cards of Array.from(hand.ranks)) {
+			if (cards === undefined) continue
+			if (cards.length === 4) {
+				hand.minimalCards = cards.slice()
+				hand.handName = 'FourOfaKind';
+				hand.handRank = 7;
+				return true
 			}
 		}
-		if (possibleStraight) {
-			const straight = new Straight(possibleStraight);
-			if (straight.isPossible) {
-				this.cards = straight.cards;
-			}
-		}
-		return this.cards.length === 5;
+		return false
 	}
-};
-
-class FourOfAKind extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'Four of a kind';
-		this.rank = 7;
-	}
-	make() {
-		let cards;
-		for (cards of Array.from(this.ranks)) {
-			if (cards && (cards.length === 4)) {
-				this.cards = cards;
-				this.cards.push(this.nextHighest()[0]);
-				break;
-			}
-		}
-		return this.cards.length === 5;
-	}
-};
-
-class FullHouse extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'Full house';
-		this.rank = 6;
-	}
-	make() {
-		let cards;
-		for (cards of Array.from(this.ranks)) {
+	static _testFullHouse(hand) {
+		let minimalCards = [];
+		for (let cards of Array.from(hand.ranks)) {
 			if (cards && (cards.length === 3)) {
-				this.cards = cards;
+				minimalCards = cards;
 				break;
 			}
 		}
-		if (this.cards.length === 3) {
-			for (cards of Array.from(this.ranks)) {
+		if (minimalCards.length === 3) {
+			for (let cards of Array.from(hand.ranks)) {
 				if (cards && (cards.length >= 2)) {
-					if (this.cards[0].value !== cards[0].value) {
-						this.cards = this.cards.concat(cards.slice(0, 2));
-						break;
+					if (Card.getValue(minimalCards[0]) !== Card.getValue(cards[0])) {
+						hand.minimalCards = minimalCards.concat(cards.slice(0, 2));
+						hand.handName = 'FullHouse';
+						hand.handRank = 6;
+						return true
 					}
 				}
 			}
 		}
-		return this.cards.length === 5;
+		return false
 	}
-}
-
-class Flush extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'Flush';
-		this.rank = 5;
-	}
-	make() {
-		let cards;
-		for (let suit in this.suits) {
-			cards = this.suits[suit];
+	static _testFlush(hand) {
+		for (let suit in hand.suits) {
+			let cards = hand.suits[suit];
 			if (cards.length >= 5) {
-				this.cards = cards.slice(0, 5);
-				break;
+				hand.minimalCards = cards.slice(0, 5)
+				hand.handName = 'Flush';
+				hand.handRank = 5;
+				return true
 			}
 		}
-		return this.cards.length === 5;
+		return false
 	}
-};
-
-class Straight extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'Straight';
-		this.rank = 4;
-	}
-	make() {
+	static _testStraight(hand) {
 		let card;
-		for (card of Array.from(this.cardPool)) {
+		let minimalCards = []
+		// build new cardPool with special card of '1s' for all 'As' thus Aces can have both values
+		let cardPool = hand.cardPool.slice()
+		for (let card of Array.from(cardPool)) {
 			// Handle a ace low straight
-			if (card.value === 'A') {
-				this.cardPool.push(new Card(`1${card.suit}`));
+			if (Card.getValue(card) === 'A') {
+				cardPool.push(`1${Card.getSuit(card)}`);
 			}
 		}
-		for (card of Array.from(this.cardPool)) {
-			const previousCard = this.cards[this.cards.length - 1];
+	
+		for (let card of cardPool) {
+			const previousCard = minimalCards[minimalCards.length - 1];
 			let diff = null;
 			if (previousCard) {
-				diff = previousCard.rank - card.rank;
+				diff = Card.getRank(previousCard) - Card.getRank(card)
 			}
 			if (diff > 1) {
-				this.cards = []; // Start over
-				this.cards.push(card);
+				minimalCards = []; // Start over
+				minimalCards.push(card);
 			} else if (diff === 1) {
-				this.cards.push(card);
+				minimalCards.push(card);
 				//first time through the loop
 			} else if (diff === null) {
-				this.cards.push(card);
+				minimalCards.push(card);
 			}
-			if (this.cards.length === 5) { break; }
-		}
-		return this.cards.length === 5;
-	}
-};
-
-class ThreeOfAKind extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'Three of a kind';
-		this.rank = 3;
-	}
-	make() {
-		let cards;
-		for (cards of Array.from(this.ranks)) {
-			if (cards && (cards.length === 3)) {
-				this.cards = cards;
-				this.cards = this.cards.concat(this.nextHighest().slice(0, 2));
-				break;
+			if (minimalCards.length === 5) {
+				hand.minimalCards = minimalCards
+				hand.minimalCards = hand.minimalCards.map((card) => {
+					if (Card.getValue(card) === '1') return 'A' + Card.getSuit(card)
+					return card
+				})
+				hand.handName = 'Straight'
+				hand.handRank = 4
+				return true
 			}
 		}
-		return this.cards.length === 5;
+		return false
 	}
-};
-
-class TwoPair extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'Two pair';
-		this.rank = 2;
-	}
-	make() {
-		let cards;
-		for (cards of Array.from(this.ranks)) {
-			if ((this.cards.length > 0) && cards && (cards.length === 2)) {
-				this.cards = this.cards.concat(cards);
-				this.cards.push(this.nextHighest()[0]);
-				break;
-			} else if (cards && (cards.length === 2)) {
-				this.cards = this.cards.concat(cards);
+	static _testThreeOfaKind(hand) {
+		for (let cards of Array.from(hand.ranks)) {
+			if (cards === undefined) continue
+			if (cards.length === 3) {
+				hand.minimalCards = cards.slice()
+				hand.handName = 'ThreeOfaKind';
+				hand.handRank = 3;
+				return true
 			}
 		}
-		return this.cards.length === 5;
+		return false
 	}
-};
-
-class OnePair extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'One pair';
-		this.rank = 1;
-	}
-	make() {
-		let cards;
-		for (cards of Array.from(this.ranks)) {
-			if (cards && (cards.length === 2)) {
-				this.cards = this.cards.concat(cards);
-				this.cards = this.cards.concat((this.nextHighest().slice(0, 3)));
-				break;
+	
+	static _testTwoPair(hand) {
+		let minimalCards = []
+		for (let cards of Array.from(hand.ranks)) {
+			if (cards === undefined) continue
+			if (minimalCards.length === 2 && cards.length === 2) {
+				// update and return hand
+				hand.minimalCards = minimalCards.concat(cards);
+				hand.handName = 'TwoPair';
+				hand.handRank = 2;
+				return true
+			} else if (minimalCards.length === 0 && cards.length === 2) {
+				minimalCards = cards
 			}
 		}
-		return this.cards.length === 5;
+		return false
 	}
-};
-
-
-class HighCard extends Hand {
-	constructor(cards){
-		super(cards)
-		this.name = 'High card';
-		this.rank = 0;
+	static _testOnePair(hand) {
+		for (let cards of hand.ranks) {
+			if (cards === undefined) continue
+			if (cards.length === 2) {
+				// update and return hand
+				hand.minimalCards = cards.slice()
+				hand.handName = 'OnePair';
+				hand.handRank = 1;
+				return true
+			}
+		}
+		return false
 	}
-	make() {
-		this.cards = this.cardPool.slice(0, 5);
-		return true;
+	static _testHighCard(hand) {
+		// update and return hand
+		hand.minimalCards = hand.cardPool.slice(0, 1)
+		hand.handName = 'HighCard';
+		hand.handRank = 0;
+		return true
 	}
+	
 }
 
-export default Hand
+Hand.HandEvaluator = HandEvaluator
+
+HandEvaluator._handTestFunctions = []
+HandEvaluator._handTestFunctions.push(HandEvaluator._testStraightFlush);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testFourOfaKind);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testFullHouse);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testFlush);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testStraight);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testThreeOfaKind);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testTwoPair);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testOnePair);
+HandEvaluator._handTestFunctions.push(HandEvaluator._testHighCard);
+
+HandEvaluator.HandRanks = {
+	'StraightFlush' : 8,
+	'FourOfaKind': 7,
+	'FullHouse': 6,
+	'Flush': 5,
+	'Straight': 4,
+	'ThreeOfaKind': 3,
+	'TwoPair': 2,
+	'OnePair': 1,
+	'HighCard': 0,
+}

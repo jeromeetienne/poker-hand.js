@@ -12,5 +12,5 @@ console.log(`firstHand minimalCards ${firstHand.minimalCards} handName ${firstHa
 
 
 let nSimulations = 1000
-let outCards = PokerHand.Montecarlo2.computeOuts(holeCards, communityCards, requireHandRank, nSimulations)
+let outCards = PokerHand.MonteCarlo.computeOuts(holeCards, communityCards, requireHandRank, nSimulations)
 console.log(`nOuts ${outCards.length} outCards ${outCards}`)

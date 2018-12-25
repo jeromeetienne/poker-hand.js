@@ -1,40 +1,29 @@
 class Card {
-	////////////////////////////////////////////////////////////////////////
-	//		obsolete
-	////////////////////////////////////////////////////////////////////////
-	
-	constructor(str) {
-		this.value = str.substr(0, 1);
-		this.suit = str.substr(1, 1).toLowerCase();
-		this.rank = Card.VALUES.indexOf(this.value);
+	static getValue(cardString){
+		let value = cardString[0]
+		return value
 	}
-
-	static fromString(str){
-		return new Card(str)
+	static getSuit(cardString){
+		let suit = cardString[1]
+		return suit
 	}
-
-	toString() {
-		if (this.rank === 0) {
-			return `A${this.suit}(Low)`;
+	static getRank(cardString){
+		let rank = Card.RANKS.indexOf(Card.getValue(cardString))
+		console.assert(rank !== -1)
+		return rank
+	}
+	static sort(cardA, cardB){
+		if (Card.getRank(cardA) > Card.getRank(cardB)) {
+			return -1;
+		} else if (Card.getRank(cardA) < Card.getRank(cardB)) {
+			return 1;
 		} else {
-			return `${this.value}${this.suit}`;
+			return 0;
 		}
 	}
-
 }
 Card.SUITS = ['s', 'h', 'c', 'd']
 Card.DENOMINATIONS = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
-
-
-Card.VALUES = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
-Card.sort = function (a, b) {
-	if (a.rank > b.rank) {
-		return -1;
-	} else if (a.rank < b.rank) {
-		return 1;
-	} else {
-		return 0;
-	}
-};
+Card.RANKS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 
 export default Card
