@@ -12,15 +12,10 @@
 <body>
 	<h2>Hand name <span id='myHandNameID'>?</span></h2>
 	<h2>oddsIfAllIn: <span id='oddsIfAllInValueID'>?</span> - Rounds <span id='oddsIfAllInRoundsID'>?</span></h2>
-	<h2>Outs: count <span id='nOutsID'>?</span> - cards <span id='OutCardsID'>?</span></h2>
-	<div>requiredHandRank
-		<select id="outsRequiredHandRankID"></select>
-	</div>
-	<br/>
-	<div>
-		<strong>Poker Odds</strong> <span id='PokerOddsPercentID'></span> - <span id='PokerOddsRatioID'></span>
-
-	</div>
+	<h2>Outs: count <span id='nOutsID'>?</span> - cards <span id='OutCardsID'>?</span>
+		- odds <span id='OutOddsRatioID'></span> (<span id='OutOddsPercentID'></span>)
+		- requiredHandRank <select id="outsRequiredHandRankID"></select>
+	</h2>
 	<h2>Community Cards</h2>
 	<div id='communityCardsID'></div>
 	<h2>Hole Cards</h2>
@@ -193,12 +188,12 @@
 		document.querySelector('#nOutsID').innerHTML = outCards.length
 		document.querySelector('#OutCardsID').innerHTML = outCards
 
-		// display #PokerOddsPercentID
+		// display #OutOddsPercentID
 		let nUnseenCards = 52 - holeCards.length - communityCards.length
-		let pokerOdds = outCards.length / nUnseenCards
-		let pokerOddsRatio = Math.round( (nUnseenCards - outCards.length) / outCards.length ) + ':1' 
-		document.querySelector('#PokerOddsPercentID').innerHTML = (pokerOdds*100).toFixed(2) + '%'
-		document.querySelector('#PokerOddsRatioID').innerHTML = pokerOddsRatio
+		let OutOdds = outCards.length / nUnseenCards
+		let OutOddsRatio = Math.round( (nUnseenCards - outCards.length) / outCards.length ) + ':1' 
+		document.querySelector('#OutOddsPercentID').innerHTML = (OutOdds*100).toFixed(2) + '%'
+		document.querySelector('#OutOddsRatioID').innerHTML = OutOddsRatio
 
 	}
 
