@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <style>
 	body {
 		background-color: green;
@@ -10,11 +11,15 @@
 
 <body>
 	<h2>Hand name <span id='myHandNameID'>?</span></h2>
-	<h2>oddsIfAllInValue: <span id='oddsIfAllInValueID'>?</span></h2>
-	<h2>oddsIfAllInRounds: <span id='oddsIfAllInRoundsID'>?</span></h2>
+	<h2>oddsIfAllIn: <span id='oddsIfAllInValueID'>?</span> - Rounds <span id='oddsIfAllInRoundsID'>?</span></h2>
 	<h2>Outs: count <span id='nOutsID'>?</span> - cards <span id='OutCardsID'>?</span></h2>
 	<div>requiredHandRank
 		<select id="outsRequiredHandRankID"></select>
+	</div>
+	<br/>
+	<div>
+		<strong>Poker Odds</strong> <span id='PokerOddsPercentID'></span> - <span id='PokerOddsRatioID'></span>
+
 	</div>
 	<h2>Community Cards</h2>
 	<div id='communityCardsID'></div>
@@ -98,6 +103,10 @@
 		displayOuts()
 		displayMyHandName()
 	}
+	////////////////////////////////////////////////////////////////////////
+	//		Code
+	////////////////////////////////////////////////////////////////////////
+	
 
 	function displayMyHandName(){
 		// get holdCards + communityCards from UI
@@ -178,11 +187,19 @@
 		console.log(`firstHand ${firstHand.minimalCards} name ${firstHand.handName} rank ${firstHand.handRank}`)
 		console.log('requiredHandRank', requiredHandRank)
 
-
+		// display outCards
 		let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requiredHandRank, nSimulations)
 		console.log(`nOuts ${outCards.length} outCards ${outCards}`)
 		document.querySelector('#nOutsID').innerHTML = outCards.length
 		document.querySelector('#OutCardsID').innerHTML = outCards
+
+		// display #PokerOddsPercentID
+		let nUnseenCards = 52 - holeCards.length - communityCards.length
+		let pokerOdds = outCards.length / nUnseenCards
+		let pokerOddsRatio = Math.round( (nUnseenCards - outCards.length) / outCards.length ) + ':1' 
+		document.querySelector('#PokerOddsPercentID').innerHTML = (pokerOdds*100).toFixed(2) + '%'
+		document.querySelector('#PokerOddsRatioID').innerHTML = pokerOddsRatio
+
 	}
 
 	////////////////////////////////////////////////////////////////////////
