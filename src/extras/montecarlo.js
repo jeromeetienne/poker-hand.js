@@ -1,7 +1,7 @@
 import Hand from '../core/hand.js'
 import Utils from './utils.js'
 
-function computeOuts(holeCards, communityCards, requiredHandRank, nSimulations) {
+function simulateOutsCount(holeCards, communityCards, requiredHandRank, nSimulations) {
 	const outCardsSet = new Set();
 
 	console.assert(holeCards.length === 2)
@@ -44,7 +44,7 @@ function computeOuts(holeCards, communityCards, requiredHandRank, nSimulations) 
 ////////////////////////////////////////////////////////////////////////
 //		Code
 ////////////////////////////////////////////////////////////////////////
-function simulateMultipleRound(nbRounds, holeCards, communityCards, nbOtherPlayers) {
+function simulateOddsIfAllIn(nbRounds, holeCards, communityCards, nbOtherPlayers) {
 	var result = 0
 	for (let roundIndex = 0; roundIndex < nbRounds; roundIndex++) {
 		var amIWinning = simulateOneRound(holeCards, communityCards, nbOtherPlayers)
@@ -119,6 +119,6 @@ function simulateOneRound(holeCards, communityCards, nbOtherPlayers) {
 ////////////////////////////////////////////////////////////////////////
 
 export default {
-	simulateMultipleRound,
-	computeOuts,
+	simulateOddsIfAllIn,
+	simulateOutsCount,
 }

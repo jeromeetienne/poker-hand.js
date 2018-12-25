@@ -1,6 +1,6 @@
 'use strict';
 
-class Card2 {
+class Card {
 	static getValue(cardString){
 		let value = cardString[0];
 		return value
@@ -10,35 +10,35 @@ class Card2 {
 		return suit
 	}
 	static getRank(cardString){
-		let rank = Card2.RANKS.indexOf(Card2.getValue(cardString));
+		let rank = Card.RANKS.indexOf(Card.getValue(cardString));
 		console.assert(rank !== -1);
 		return rank
 	}
 	static sort(cardA, cardB){
-		if (Card2.getRank(cardA) > Card2.getRank(cardB)) {
+		if (Card.getRank(cardA) > Card.getRank(cardB)) {
 			return -1;
-		} else if (Card2.getRank(cardA) < Card2.getRank(cardB)) {
+		} else if (Card.getRank(cardA) < Card.getRank(cardB)) {
 			return 1;
 		} else {
 			return 0;
 		}
 	}
 }
-Card2.SUITS = ['s', 'h', 'c', 'd'];
-Card2.DENOMINATIONS = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
-Card2.RANKS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+Card.SUITS = ['s', 'h', 'c', 'd'];
+Card.DENOMINATIONS = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
+Card.RANKS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
 
-class Hand$1 {
+class Hand {
 	// Need to take 7 cards, and return a best hand
 	constructor(cardPool, doNotEvaluate) {
 		this.cardPool = [];
 		this.suits = {};
 		this.ranks = [];
 		this.cardPool = cardPool.slice();
-		this.cardPool.sort(Card2.sort);
+		this.cardPool.sort(Card.sort);
 		for (let card of Array.from(this.cardPool)) {
-			let suit = Card2.getSuit(card);
-			let rank = Card2.getRank(card);
+			let suit = Card.getSuit(card);
+			let rank = Card.getRank(card);
 			// init arrays if needed
 			if (this.suits[suit] === undefined) { this.suits[suit] = []; }
 			if (this.ranks[rank] === undefined) { this.ranks[rank] = []; }
@@ -71,9 +71,9 @@ class Hand$1 {
 		}
 		// highest card.rank if hand.rank is the same
 		for (let cardIndex = 0; cardIndex <= 4; cardIndex++) {
-			if (Card2.getRank(this.fullCards[cardIndex]) < Card2.getRank(otherHand.fullCards[cardIndex])) {
+			if (Card.getRank(this.fullCards[cardIndex]) < Card.getRank(otherHand.fullCards[cardIndex])) {
 				return 1
-			} else if (Card2.getRank(this.fullCards[cardIndex]) > Card2.getRank(otherHand.fullCards[cardIndex])) {
+			} else if (Card.getRank(this.fullCards[cardIndex]) > Card.getRank(otherHand.fullCards[cardIndex])) {
 				return -1
 			}
 		}
@@ -82,7 +82,7 @@ class Hand$1 {
 	}
 
 	static make(cardPool, doNotEvaluate){
-		let hand = new Hand$1(cardPool, doNotEvaluate);
+		let hand = new Hand(cardPool, doNotEvaluate);
 		return hand
 	}
 
@@ -126,7 +126,7 @@ class Hand$1 {
 }
 
 
-Hand$1.pickWinners = function (hands) {
+Hand.pickWinners = function (hands) {
 	// Find highest ranked hands
 	// reject any that lose another hand
 	const byRank = hands.map(h => h.handRank);
@@ -174,7 +174,7 @@ class HandEvaluator {
 			let cards = hand.suits[suit];
 			if (cards.length < 5) continue
 	
-			const tmpHand = new Hand$1(cards, true);
+			const tmpHand = new Hand(cards, true);
 			let isValid = HandEvaluator._testStraight(tmpHand);
 			if (isValid === false) continue
 	
@@ -208,7 +208,7 @@ class HandEvaluator {
 		if (minimalCards.length === 3) {
 			for (let cards of Array.from(hand.ranks)) {
 				if (cards && (cards.length >= 2)) {
-					if (Card2.getValue(minimalCards[0]) !== Card2.getValue(cards[0])) {
+					if (Card.getValue(minimalCards[0]) !== Card.getValue(cards[0])) {
 						hand.minimalCards = minimalCards.concat(cards.slice(0, 2));
 						hand.handName = 'FullHouse';
 						hand.handRank = 6;
@@ -237,8 +237,8 @@ class HandEvaluator {
 		let cardPool = hand.cardPool.slice();
 		for (let card of Array.from(cardPool)) {
 			// Handle a ace low straight
-			if (Card2.getValue(card) === 'A') {
-				cardPool.push(`1${Card2.getSuit(card)}`);
+			if (Card.getValue(card) === 'A') {
+				cardPool.push(`1${Card.getSuit(card)}`);
 			}
 		}
 	
@@ -246,7 +246,7 @@ class HandEvaluator {
 			const previousCard = minimalCards[minimalCards.length - 1];
 			let diff = null;
 			if (previousCard) {
-				diff = Card2.getRank(previousCard) - Card2.getRank(card);
+				diff = Card.getRank(previousCard) - Card.getRank(card);
 			}
 			if (diff > 1) {
 				minimalCards = []; // Start over
@@ -260,7 +260,7 @@ class HandEvaluator {
 			if (minimalCards.length === 5) {
 				hand.minimalCards = minimalCards;
 				hand.minimalCards = hand.minimalCards.map((card) => {
-					if (Card2.getValue(card) === '1') return 'A' + Card2.getSuit(card)
+					if (Card.getValue(card) === '1') return 'A' + Card.getSuit(card)
 					return card
 				});
 				hand.handName = 'Straight';
@@ -322,7 +322,7 @@ class HandEvaluator {
 	
 }
 
-Hand$1.HandEvaluator = HandEvaluator;
+Hand.HandEvaluator = HandEvaluator;
 
 HandEvaluator._handTestFunctions = [];
 HandEvaluator._handTestFunctions.push(HandEvaluator._testStraightFlush);
@@ -447,7 +447,7 @@ var Utils = {
 	computePositionLabelRaw,
 };
 
-function computeOuts(holeCards, communityCards, requiredHandRank, nSimulations) {
+function simulateOutsCount(holeCards, communityCards, requiredHandRank, nSimulations) {
 	const outCardsSet = new Set();
 
 	console.assert(holeCards.length === 2);
@@ -460,7 +460,7 @@ function computeOuts(holeCards, communityCards, requiredHandRank, nSimulations) 
 
 		// console.log(`newCommunityCards ${newCommunityCards}`)
 
-		let finalHand = Hand$1.make(holeCards.concat(newCommunityCards));
+		let finalHand = Hand.make(holeCards.concat(newCommunityCards));
 		// let communityHand = PokerHand.Hand.make(newCommunityCards)
 		// console.log(`finalHand ${finalHand.minimalCards} name ${finalHand.handName} rank ${finalHand.handRank}`)
 		// console.log(`communityHand ${communityHand} name ${communityHand.handName} rank ${communityHand.handRank}`)
@@ -488,7 +488,7 @@ function computeOuts(holeCards, communityCards, requiredHandRank, nSimulations) 
 ////////////////////////////////////////////////////////////////////////
 //		Code
 ////////////////////////////////////////////////////////////////////////
-function simulateMultipleRound(nbRounds, holeCards, communityCards, nbOtherPlayers) {
+function simulateOddsIfAllIn(nbRounds, holeCards, communityCards, nbOtherPlayers) {
 	var result = 0;
 	for (let roundIndex = 0; roundIndex < nbRounds; roundIndex++) {
 		var amIWinning = simulateOneRound(holeCards, communityCards, nbOtherPlayers);
@@ -518,18 +518,18 @@ function simulateOneRound(holeCards, communityCards, nbOtherPlayers) {
 
 	// compute myFinalHand
 	let myFinalCards = holeCards.concat(finalCommunityCards);
-	let myFinalHand = new Hand$1(myFinalCards);
+	let myFinalHand = new Hand(myFinalCards);
 
 	// compute all otherPlayersFinalHand
 	let otherPlayersFinalHand = [];
 	for (let i = 0; i < nbOtherPlayers; i++) {
 		let otherPlayerFinalCards = otherPlayersHoleCards[i].concat(finalCommunityCards);
-		otherPlayersFinalHand[i] = new Hand$1(otherPlayerFinalCards);
+		otherPlayersFinalHand[i] = new Hand(otherPlayerFinalCards);
 	}
 
 	// determine who will win
 	let allFinalHands = [myFinalHand].concat(otherPlayersFinalHand);
-	let winnersHand = Hand$1.pickWinners(allFinalHands);
+	let winnersHand = Hand.pickWinners(allFinalHands);
 	let winnerIndex = allFinalHands.indexOf(winnersHand[0]);
 
 	////////////////////////////////////////////////////////////////////////
@@ -563,8 +563,8 @@ function simulateOneRound(holeCards, communityCards, nbOtherPlayers) {
 ////////////////////////////////////////////////////////////////////////
 
 var MonteCarlo = {
-	simulateMultipleRound,
-	computeOuts,
+	simulateOddsIfAllIn,
+	simulateOutsCount,
 };
 
 class CardDomElement {

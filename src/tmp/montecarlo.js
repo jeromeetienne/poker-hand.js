@@ -11,7 +11,7 @@ import Utils from '../extras/utils.js'
 ////////////////////////////////////////////////////////////////////////
 //		Code
 ////////////////////////////////////////////////////////////////////////
-function simulateMultipleRound(nbRounds, holeCards, communityCards, nbOtherPlayers) {
+function simulateOddsIfAllIn(nbRounds, holeCards, communityCards, nbOtherPlayers) {
 	var result = 0
 	for (let roundIndex = 0; roundIndex < nbRounds; roundIndex++) {
 		var amIWinning = simulateOneRound(holeCards, communityCards, nbOtherPlayers)
@@ -86,5 +86,5 @@ function simulateOneRound(holeCards, communityCards, nbOtherPlayers) {
 ////////////////////////////////////////////////////////////////////////
 
 export default {
-	simulateMultipleRound
+	simulateOddsIfAllIn
 }

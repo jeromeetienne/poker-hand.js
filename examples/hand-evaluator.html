@@ -179,7 +179,7 @@
 		console.log('requiredHandRank', requiredHandRank)
 
 
-		let outCards = PokerHand.MonteCarlo.computeOuts(holeCards, communityCards, requiredHandRank, nSimulations)
+		let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requiredHandRank, nSimulations)
 		console.log(`nOuts ${outCards.length} outCards ${outCards}`)
 		document.querySelector('#nOutsID').innerHTML = outCards.length
 		document.querySelector('#OutCardsID').innerHTML = outCards
@@ -229,9 +229,9 @@
 			return
 		}
 
-		// console.time('simulateMultipleRound')
-		let likelyHoodToWin = PokerHand.MonteCarlo.simulateMultipleRound(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
-		// console.timeEnd('simulateMultipleRound')
+		// console.time('simulateOddsIfAllIn')
+		let likelyHoodToWin = PokerHand.MonteCarlo.simulateOddsIfAllIn(bestLikelyHoodStepRounds, holeCards, communityCards, nbOtherPlayers)
+		// console.timeEnd('simulateOddsIfAllIn')
 		// console.log('likelyHoodtoWin', likelyHoodToWin)
 
 

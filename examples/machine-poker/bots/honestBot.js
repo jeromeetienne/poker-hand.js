@@ -14,7 +14,7 @@ module.exports = function () {
 		let communityCards = gameData.community
 		let nbOtherPlayers = gameData.players.length - 1
 
-		var likelyHoodToWin = PokerHand.Montecarlo.simulateMultipleRound(100, myHoleCards, communityCards, nbOtherPlayers)
+		var likelyHoodToWin = PokerHand.MonteCarlo.simulateOddsIfAllIn(100, myHoleCards, communityCards, nbOtherPlayers)
 		// console.log('chips', gameData.self.chips)
 
 		if (likelyHoodToWin > 0.5 / nbOtherPlayers) {
