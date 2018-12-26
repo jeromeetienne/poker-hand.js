@@ -3,8 +3,8 @@
 	border: solid 2px;
 	position: relative;
 	border-radius: 20px;
-	width: 100px;
-	height: 160px;
+	width: 120px;
+	height: 180px;
 	margin: 10px;
 	display: inline-block;
 	text-align: center;
@@ -19,7 +19,7 @@
 	font-weight: bolder;
 	font-family: arial;
 	position: absolute;
-	font-size: 400%;
+	font-size: 450%;
 	width: 100%;
 }
 
@@ -28,7 +28,7 @@
 	font-weight: bolder;
 	font-family: arial;
 	position: absolute;
-	font-size: 450%;
+	font-size: 500%;
 	width: 100%;
 
 }
@@ -40,12 +40,13 @@
 	height: 100%;
 	background-color: green;
 }
-#cardSelectionID .denominationSelection div {
+#cardSelectionID .denominationSelection div
+{
 	background-color: #eee;
 	border: solid 2px;
 	position: relative;
-	width: 100px;
-	height: 100px;
+	width: 150px;
+	height: 150px;
 	margin: 10px;
 	display: inline-block;
 
@@ -60,8 +61,8 @@
 	border: solid 2px;
 	border-color: black;
 	position: relative;
-	width: 100px;
-	height: 100px;
+	width: 150px;
+	height: 150px;
 	margin: 10px;
 	display: inline-block;
 

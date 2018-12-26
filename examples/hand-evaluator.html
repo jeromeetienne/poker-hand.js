@@ -10,23 +10,31 @@
 <link rel="stylesheet" href="css/card-ui.css" />
 
 <body>
+	<div id='communityCardsID'></div>
+	<div id='holeCardsID'></div>
+	<br/>
+	<br/>
+	<br/>
+	
+	<input type="button" value="Reset hand" id='resetHandID'>
+
 	<h2>Hand name <span id='myHandNameID'>?</span></h2>
+
 	<h2>oddsIfAllIn: <span id='oddsIfAllInValueID'>?</span> - Rounds <span id='oddsIfAllInRoundsID'>?</span></h2>
+
 	<h2>Outs: count <span id='nOutsID'>?</span> - cards <span id='OutCardsID'>?</span>
 		- odds <span id='OutOddsRatioID'></span> (<span id='OutOddsPercentID'></span>)
 		- requiredHandRank <select id="outsRequiredHandRankID"></select>
 	</h2>
-	<h2>Community Cards</h2>
-	<div id='communityCardsID'></div>
-	<h2>Hole Cards</h2>
-	<div id='holeCardsID'></div>
+
+
 	<h2>Parameters</h2>
 	<label>
 		n other players:
 		<input type="number" id="nOtherPlayersID" min='2' max='22' value='2'>
 	</label>
 	<br/>
-	<input type="button" value="Reset hand" id='resetHandID'>
+
 	<!-- html for card selection -->
 	<div id='cardSelectionID' style='display: none'>
 		<div class='denominationSelection'>
