@@ -43,16 +43,17 @@
 #cardSelectionID .denominationSelection div
 {
 	background-color: #eee;
+	border-color: black;
 	border: solid 2px;
 	position: relative;
 	width: 150px;
-	height: 150px;
+	line-height: 200%;
 	margin: 10px;
 	display: inline-block;
 
 
 	border-radius: 10px;
-	font-size: 450%;
+	font-size: 500%;
 	    font-weight: bolder;
 	    text-align: center;
 }
@@ -62,12 +63,12 @@
 	border-color: black;
 	position: relative;
 	width: 150px;
-	height: 150px;
+	line-height: 200%;
 	margin: 10px;
 	display: inline-block;
 
 	border-radius: 10px;
-	font-size: 450%;
+	font-size: 500%;
 	    font-weight: bolder;
 	    text-align: center;
 }
