@@ -10,9 +10,11 @@ let cards = []
 let initialDeck = new PokerHand.Deck()
 initialDeck.removeCards(cards)
 
-countHandsFrequency(cards, initialDeck)
-function countHandsFrequency(cardPool, deck){
-	if( cardPool.length === 3 ){
+// only 3 cards
+countHandsFrequency(cards, 3, initialDeck)
+
+function countHandsFrequency(cardPool, nRemainingCards, deck){
+	if( nRemainingCards === 0 ){
 		// console.log('cardPool', cardPool)
 		let hand = PokerHand.Hand.make(cardPool)
 	
@@ -26,7 +28,7 @@ function countHandsFrequency(cardPool, deck){
 	for(let possibleCard of possibleCards ){
 		let newDeck = deck.clone().removeCard(possibleCard)
 		let newCardPool = cardPool.concat([possibleCard])
-		countHandsFrequency(newCardPool, newDeck)
+		countHandsFrequency(newCardPool, nRemainingCards-1, newDeck)
 	}	
 }
 

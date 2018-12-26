@@ -11,7 +11,7 @@ function update(gameData) {
 	let communityCards = gameData.community
 	let nbOtherPlayers = gameData.players.length - 1
 
-	var oddsIfAllIn = PokerHand.MonteCarlo.simulateOddsIfAllIn(100, myHoleCards, communityCards, nbOtherPlayers)
+	var oddsIfAllIn = PokerHand.MonteCarlo.simulateOddsIfAllIn(1000, myHoleCards, communityCards, nbOtherPlayers)
 	// console.log('handoddsIfAllIn', oddsIfAllIn)
 
 	var potSize = PokerHand.Utils.computePotSize(gameData)
