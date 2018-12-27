@@ -1,6 +1,6 @@
 - use https://github.com/josdejong/workerpool
   in compute-hands-probability.js
-- let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requireHandRank, nSimulations)
+- DONE let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requireHandRank, nSimulations)
   - in simulateOutsCount... why more than 52 ???
   - create a deck, remove the used cards, and then use deck.cards
   - move that into Utils.computeOutCards(holeCards, communityCards, requireHandRank)
