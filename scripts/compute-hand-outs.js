@@ -11,6 +11,5 @@ let requireHandRank = firstHand.handRank + 1
 console.log(`firstHand minimalCards ${firstHand.minimalCards} handName ${firstHand.handName} handRank ${firstHand.handRank}`)
 
 
-let nSimulations = 1000
-let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requireHandRank, nSimulations)
+let outCards = PokerHand.Utils.computeOutCards(holeCards, communityCards, requireHandRank)
 console.log(`nOuts ${outCards.length} outCards ${outCards}`)

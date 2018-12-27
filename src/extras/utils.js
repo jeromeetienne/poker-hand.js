@@ -1,3 +1,7 @@
+import Deck from '../core/deck.js'
+import Hand from '../core/hand.js'
+
+
 ////////////////////////////////////////////////////////////////////////
 //		Utils to generate random cards from a deck
 ////////////////////////////////////////////////////////////////////////
@@ -83,6 +87,41 @@ function computePositionLabelRaw(gameData) {
 }
 
 ////////////////////////////////////////////////////////////////////////
+//		Code
+////////////////////////////////////////////////////////////////////////
+
+function computeOutCards(holeCards, communityCards, requiredHandRank) {
+	const outCardsSet = new Set();
+
+	console.assert(holeCards.length === 2)
+	console.assert(communityCards.length >= 0)
+
+	let deck = new Deck()
+	deck.removeCards(holeCards).removeCards(communityCards)
+	let unusedCards = deck.cards
+
+	let cardsPool = holeCards.concat(communityCards)
+
+	for(let randomCard of unusedCards){
+		let finalHand = Hand.make(cardsPool.concat([randomCard]))
+
+		let involvedMyHoleCards = finalHand.minimalCards.indexOf(holeCards[0]) !== -1
+			|| finalHand.minimalCards.indexOf(holeCards[1]) !== -1
+
+		if (finalHand.handRank >= requiredHandRank && involvedMyHoleCards === true) {
+			// console.log(`${randomCard} IS an out`)
+			outCardsSet.add(randomCard.toString())
+		} else {
+			// console.log(`${randomCard} IS NOT an out`)
+		}
+	}
+
+	let outCards = Array.from(outCardsSet).sort()
+	// console.log(`nOuts ${outCards.length} outCards ${outCards}`)
+	return outCards
+}
+
+////////////////////////////////////////////////////////////////////////
 //		es6 export
 ////////////////////////////////////////////////////////////////////////
 
@@ -90,10 +129,14 @@ export default {
 	pickRandomCard,
 	pickUnusedCards,
 
+	computeOutCards,
+
 	computePotSize,
 	computePotOdds,
 
 	computePositionIndex,	
 	computePositionLabel,
 	computePositionLabelRaw,
+
+	computeOutCards,
 }

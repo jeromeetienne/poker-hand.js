@@ -511,38 +511,23 @@ function computePositionLabelRaw(gameData) {
 }
 
 ////////////////////////////////////////////////////////////////////////
-//		es6 export
+//		Code
 ////////////////////////////////////////////////////////////////////////
 
-var Utils = {
-	pickRandomCard,
-	pickUnusedCards,
-
-	computePotSize,
-	computePotOdds,
-
-	computePositionIndex,	
-	computePositionLabel,
-	computePositionLabelRaw,
-};
-
-function simulateOutsCount(holeCards, communityCards, requiredHandRank, nSimulations) {
+function computeOutCards(holeCards, communityCards, requiredHandRank) {
 	const outCardsSet = new Set();
 
 	console.assert(holeCards.length === 2);
 	console.assert(communityCards.length >= 0);
 
-	for (let i = 0; i < nSimulations; i++) {
-		let randomCard = Utils.pickUnusedCards(1, holeCards.concat(communityCards));
-		// console.log(`draw cards ${randomCard}`)
-		let newCommunityCards = communityCards.concat(randomCard);
+	let deck = new Deck();
+	deck.removeCards(holeCards).removeCards(communityCards);
+	let unusedCards = deck.cards;
 
-		// console.log(`newCommunityCards ${newCommunityCards}`)
+	let cardsPool = holeCards.concat(communityCards);
 
-		let finalHand = Hand.make(holeCards.concat(newCommunityCards));
-		// let communityHand = PokerHand.Hand.make(newCommunityCards)
-		// console.log(`finalHand ${finalHand.minimalCards} name ${finalHand.handName} rank ${finalHand.handRank}`)
-		// console.log(`communityHand ${communityHand} name ${communityHand.handName} rank ${communityHand.handRank}`)
+	for(let randomCard of unusedCards){
+		let finalHand = Hand.make(cardsPool.concat([randomCard]));
 
 		let involvedMyHoleCards = finalHand.minimalCards.indexOf(holeCards[0]) !== -1
 			|| finalHand.minimalCards.indexOf(holeCards[1]) !== -1;
@@ -558,6 +543,25 @@ function simulateOutsCount(holeCards, communityCards, requiredHandRank, nSimulat
 	return outCards
 }
 
+////////////////////////////////////////////////////////////////////////
+//		es6 export
+////////////////////////////////////////////////////////////////////////
+
+var Utils = {
+	pickRandomCard,
+	pickUnusedCards,
+
+	computeOutCards,
+
+	computePotSize,
+	computePotOdds,
+
+	computePositionIndex,	
+	computePositionLabel,
+	computePositionLabelRaw,
+
+	computeOutCards,
+};
 
 /**
  * - good link on poker-odd and expected value
@@ -643,7 +647,6 @@ function simulateOneRound(holeCards, communityCards, nbOtherPlayers) {
 
 var MonteCarlo = {
 	simulateOddsIfAllIn,
-	simulateOutsCount,
 };
 
 class CardDomElement {

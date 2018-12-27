@@ -5,6 +5,7 @@ Object.keys(PokerHand.Hand.HandEvaluator.HandRanks).forEach((handName)=>{
 	handNameCounters[handName] = 0
 })
 
+// initial hand
 let cards = []
 
 let initialDeck = new PokerHand.Deck()
@@ -32,6 +33,10 @@ function countHandsFrequency(cardPool, nRemainingCards, deck){
 	}	
 }
 
+////////////////////////////////////////////////////////////////////////
+//		Code
+////////////////////////////////////////////////////////////////////////
+
 let handsTotal = 0
 Object.keys(handNameCounters).forEach((handName) => {
 	handsTotal += handNameCounters[handName]
@@ -44,4 +49,5 @@ Object.keys(handNameCounters).forEach((handName) => {
 	console.log('handName', handName, (percent*100).toFixed(2)+'%')
 })
 console.log('handNameCounters', handNameCounters)
+
 
