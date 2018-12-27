@@ -1,9 +1,11 @@
 - use https://github.com/josdejong/workerpool
   in compute-hands-probability.js
+
 - DONE let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requireHandRank, nSimulations)
   - in simulateOutsCount... why more than 52 ???
   - create a deck, remove the used cards, and then use deck.cards
   - move that into Utils.computeOutCards(holeCards, communityCards, requireHandRank)
+
 ---
 
 - display poker odds
@@ -12,10 +14,10 @@
   - simply add 2 input number for the moment
 - find a better name - poker-hand.js
   - poker-hand.js is not representative, it is boring
-  - poker-analyst.js ?
+  - poker-analyser.js ?
+  - poker-doctor.js ?
 - retire machine-poker-bot
   - make a bot using poker-hand.js
-
 
 ---
 - DONE rename likelyhoodToWin to oddsIfAllIn ?
