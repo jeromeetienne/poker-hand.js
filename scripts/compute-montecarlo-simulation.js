@@ -1,7 +1,7 @@
 let PokerHand = require('../build/poker-hand.mjs')
 
 // get those data from command line
-let holeCards = ['Kc', 'Ks']
+let holeCards = ['Ac', 'As']
 let communityCards = []
 let nbOtherPlayers = 2
 

@@ -11,19 +11,19 @@ function update(gameData) {
 	let communityCards = gameData.community
 	let nbOtherPlayers = gameData.players.length - 1
 
-	var oddsIfAllIn = PokerHand.MonteCarlo.simulateOddsIfAllIn(1000, myHoleCards, communityCards, nbOtherPlayers)
-	// console.log('handoddsIfAllIn', oddsIfAllIn)
+	var oddsIfAllIn = PokerHand.MonteCarlo.simulateOddsIfAllIn(500, myHoleCards, communityCards, nbOtherPlayers)
 
-	var potSize = PokerHand.Utils.computePotSize(gameData)
-	var potOdds = gameData.betting.call / potSize
+	var potOdds = PokerHand.Utils.computePotOdds(gameData)
 
 	var oddRatio = oddsIfAllIn / potOdds
 
-	console.log('oddRatio', oddRatio)
+	console.log('oddsIfAllIn', (oddsIfAllIn*100).toFixed(0)+'%', 'potOdds', (potOdds*100).toFixed(0)+'%', 'oddRatio', oddRatio.toFixed(2), this.info.name)
 
-	var bigBlindAmount = 50
 
-	if (oddRatio > 1.2 && potSize / bigBlindAmount < 10) {
+	var potSize = PokerHand.Utils.computePotSize(gameData)
+	let maxPotSize = 50*10
+
+	if (oddRatio > 1.2 && potSize <= maxPotSize ) {
 		return gameData.betting.raise
 	}
 	else if (oddRatio >= 1.0) {

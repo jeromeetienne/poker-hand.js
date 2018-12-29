@@ -43,7 +43,7 @@ function computePotSize(gameData) {
  * @param {Object} gameData 
  */
 function computePotOdds(gameData) {
-	var potSize = utils.computePotSize(gameData)
+	var potSize = computePotSize(gameData)
 	var potOdds = gameData.betting.call / potSize
 	return potOdds
 }
@@ -128,8 +128,6 @@ function computeOutCards(holeCards, communityCards, requiredHandRank) {
 export default {
 	pickRandomCard,
 	pickUnusedCards,
-
-	computeOutCards,
 
 	computePotSize,
 	computePotOdds,

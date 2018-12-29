@@ -1,6 +1,8 @@
 - use https://github.com/josdejong/workerpool
   in compute-hands-probability.js
-
+- do a cardRegexp - https://www.cardschat.com/poker-starting-hands.php#abcpoker
+  - sound cool, but no direct use for now
+  - example: 55+, Ax, T9o, T9s
 - DONE let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requireHandRank, nSimulations)
   - in simulateOutsCount... why more than 52 ???
   - create a deck, remove the used cards, and then use deck.cards
@@ -16,6 +18,9 @@
   - poker-hand.js is not representative, it is boring
   - poker-analyser.js ?
   - poker-doctor.js ?
+  - poker.js ?
+    - pro: simple
+    - con: not specific
 - retire machine-poker-bot
   - make a bot using poker-hand.js
 

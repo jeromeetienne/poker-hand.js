@@ -217,7 +217,7 @@
 		console.log('requiredHandRank', requiredHandRank)
 
 		// display outCards
-		let outCards = PokerHand.MonteCarlo.simulateOutsCount(holeCards, communityCards, requiredHandRank, nSimulations)
+		let outCards = PokerHand.Utils.computeOutCards(holeCards, communityCards, requiredHandRank, nSimulations)
 		console.log(`nOuts ${outCards.length} outCards ${outCards}`)
 		document.querySelector('#nOutsID').innerHTML = outCards.length
 		document.querySelector('#OutCardsID').innerHTML = outCards

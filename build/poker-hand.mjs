@@ -467,7 +467,7 @@ function computePotSize(gameData) {
  * @param {Object} gameData 
  */
 function computePotOdds(gameData) {
-	var potSize = utils.computePotSize(gameData);
+	var potSize = computePotSize(gameData);
 	var potOdds = gameData.betting.call / potSize;
 	return potOdds
 }
@@ -551,8 +551,6 @@ var Utils = {
 	pickRandomCard,
 	pickUnusedCards,
 
-	computeOutCards,
-
 	computePotSize,
 	computePotOdds,
 
@@ -571,6 +569,10 @@ var Utils = {
 ////////////////////////////////////////////////////////////////////////
 //		Code
 ////////////////////////////////////////////////////////////////////////
+
+/**
+ * - Good link https://www.cardschat.com/poker-starting-hands.php#twocards
+ */
 function simulateOddsIfAllIn(nbRounds, holeCards, communityCards, nbOtherPlayers) {
 	var result = 0;
 	for (let roundIndex = 0; roundIndex < nbRounds; roundIndex++) {
@@ -613,7 +615,7 @@ function simulateOneRound(holeCards, communityCards, nbOtherPlayers) {
 	// determine who will win
 	let allFinalHands = [myFinalHand].concat(otherPlayersFinalHand);
 	let winnersHand = Hand.pickWinners(allFinalHands);
-	let winnerIndex = allFinalHands.indexOf(winnersHand[0]);
+
 
 	////////////////////////////////////////////////////////////////////////
 	//		display result
@@ -637,7 +639,9 @@ function simulateOneRound(holeCards, communityCards, nbOtherPlayers) {
 	// }
 	// console.log('winnerIndex', winnerIndex)
 
-	let amIWinning = winnerIndex === 0 ? true : false;
+	// let winnerIndex = allFinalHands.indexOf(winnersHand[0])
+	// let amIWinning = allFinalHands.indexOf(winnersHand[0]) === 0 ? true : false
+	let amIWinning = winnersHand.indexOf(myFinalHand) !== -1 ? true : false;
 	return amIWinning
 }
 
