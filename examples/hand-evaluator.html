@@ -28,11 +28,11 @@
 
 	<h2>Parameters</h2>
 	<label>
-		n other players:
-		<input type="number" id="nOtherPlayersID" min='2' max='22' value='2'/>
+		Nb Players:
+		<input type="number" id="nbPlayersID" min='2' max='22' value='2'/>
 	</label>
-	<input type="button" value="+" id='nOtherPlayersMoreID'/>
-	<input type="button" value="-" id='nOtherPlayersLessID'/>
+	<input type="button" value="-" id='nbPlayersLessID'/>
+	<input type="button" value="+" id='nbPlayersMoreID'/>
 	<br/>
 
 	<!-- html for card selection -->
@@ -114,24 +114,24 @@
 		resetCardDomElements()
 		onHandChange()
 	})
-	document.querySelector('#nOtherPlayersID').addEventListener('change', function () {
+	document.querySelector('#nbPlayersID').addEventListener('change', function () {
 		onHandChange()
 	})
-	document.querySelector('#nOtherPlayersMoreID').addEventListener('click', function () {
-		let nbOtherPlayers = parseInt(document.querySelector('#nOtherPlayersID').value)
-		nbOtherPlayers += 1
-		nbOtherPlayers = Math.min(22, nbOtherPlayers)
-		nbOtherPlayers = Math.max(2, nbOtherPlayers)
-		document.querySelector('#nOtherPlayersID').value = nbOtherPlayers
+	document.querySelector('#nbPlayersMoreID').addEventListener('click', function () {
+		let nbPlayers = parseInt(document.querySelector('#nbPlayersID').value)
+		nbPlayers += 1
+		nbPlayers = Math.min(22, nbPlayers)
+		nbPlayers = Math.max(2, nbPlayers)
+		document.querySelector('#nbPlayersID').value = nbPlayers
 
 		onHandChange()
 	})
-	document.querySelector('#nOtherPlayersLessID').addEventListener('click', function () {
-		let nbOtherPlayers = parseInt(document.querySelector('#nOtherPlayersID').value)
-		nbOtherPlayers -= 1
-		nbOtherPlayers = Math.min(22, nbOtherPlayers)
-		nbOtherPlayers = Math.max(2, nbOtherPlayers)
-		document.querySelector('#nOtherPlayersID').value = nbOtherPlayers
+	document.querySelector('#nbPlayersLessID').addEventListener('click', function () {
+		let nbPlayers = parseInt(document.querySelector('#nbPlayersID').value)
+		nbPlayers -= 1
+		nbPlayers = Math.min(22, nbPlayers)
+		nbPlayers = Math.max(2, nbPlayers)
+		document.querySelector('#nbPlayersID').value = nbPlayers
 
 		onHandChange()
 	})
@@ -222,7 +222,6 @@
 		if (holeCards.length < 2) return
 
 
-		let nSimulations = 1000
 		let firstHand = PokerHand.Hand.make(holeCards.concat(communityCards))
 		let requiredHandRank = parseInt(document.querySelector('#outsRequiredHandRankID').value)
 		// handle 'Better Hand' special case
@@ -233,7 +232,7 @@
 		// console.log('requiredHandRank', requiredHandRank)
 
 		// display outCards
-		let outCards = PokerHand.Utils.computeOutCards(holeCards, communityCards, requiredHandRank, nSimulations)
+		let outCards = PokerHand.Utils.computeOutCards(holeCards, communityCards, requiredHandRank)
 		// console.log(`nOuts ${outCards.length} outCards ${outCards}`)
 		document.querySelector('#nOutsID').innerHTML = outCards.length
 		document.querySelector('#OutCardsID').innerHTML = outCards
@@ -285,7 +284,7 @@
 		let communityCards = Array.from(document.querySelectorAll('#communityCardsID .card'))
 			.filter((domElement) => domElement.dataset.cardValue !== '  ')
 			.map((domElement) => domElement.dataset.cardValue)
-		let nbOtherPlayers = parseInt(document.querySelector('#nOtherPlayersID').value)
+		let nbPlayers = parseInt(document.querySelector('#nbPlayersID').value)
 
 
 		if (holeCards.length < 2) {
@@ -294,7 +293,7 @@
 		}
 
 		// console.time('simulateOddsIfAllIn')
-		let oddsIfAllInValue = PokerHand.MonteCarlo.simulateOddsIfAllIn(bestOddsIfAllInStepRounds, holeCards, communityCards, nbOtherPlayers)
+		let oddsIfAllInValue = PokerHand.MonteCarlo.simulateOddsIfAllIn(bestOddsIfAllInStepRounds, holeCards, communityCards, nbPlayers-1)
 		// console.timeEnd('simulateOddsIfAllIn')
 		// console.log('oddsIfAllInValue', oddsIfAllInValue)
 
