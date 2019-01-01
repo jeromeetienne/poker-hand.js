@@ -32,9 +32,9 @@
 	<label>
 		n other players:
 		<input type="number" id="nOtherPlayersID" min='2' max='22' value='2'/>
-		<input type="button" value="+" id='nOtherPlayersMoreID'/>
-		<input type="button" value="-" id='nOtherPlayersLessID'/>
 	</label>
+	<input type="button" value="+" id='nOtherPlayersMoreID'/>
+	<input type="button" value="-" id='nOtherPlayersLessID'/>
 	<br/>
 
 	<!-- html for card selection -->
@@ -80,7 +80,6 @@
 		cardDomElement.addEventListener('click', function () {
 			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
 				cardDomElement.dataset.cardValue = newCardSelected
-				console.log('newCardSelected', newCardSelected)
 				PokerHand.CardDomElement.update(cardDomElement)
 				onHandChange()
 			})
