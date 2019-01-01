@@ -12,9 +12,10 @@
 <body>
 	<div id='communityCardsID'></div>
 	<div id='holeCardsID'></div>
-	<br/>
-	
-	<input type="button" value="new hand" id='newHandID'>
+	<br />
+
+	<input type="button" value="Reset Hand" id='resetHandID'>
+	<input type="button" value="New Hand" id='newHandID'>
 
 	<h2>Hand name <span id='myHandNameID'>?</span></h2>
 
@@ -29,11 +30,11 @@
 	<h2>Parameters</h2>
 	<label>
 		Nb Players:
-		<input type="number" id="nbPlayersID" min='2' max='22' value='2'/>
+		<input type="number" id="nbPlayersID" min='2' max='22' value='2' />
 	</label>
-	<input type="button" value="-" id='nbPlayersLessID'/>
-	<input type="button" value="+" id='nbPlayersMoreID'/>
-	<br/>
+	<input type="button" value="-" id='nbPlayersLessID' />
+	<input type="button" value="+" id='nbPlayersMoreID' />
+	<br />
 
 	<!-- html for card selection -->
 	<div id='cardSelectionID' style='display: none'>
@@ -70,37 +71,51 @@
 	////////////////////////////////////////////////////////////////////////
 	//		build PokerHand.CardDomElement
 	////////////////////////////////////////////////////////////////////////
-	
+
+	var communityCardDomElements = []
+	var holeCardDomElements = []
+	function onCardDomElementClick(cardDomElement, onComplete) {
+		console.log('received onCardDomElementClick')
+		PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
+			cardDomElement.dataset.cardValue = newCardSelected
+			PokerHand.CardDomElement.update(cardDomElement)
+			onComplete()
+		})
+	}
 
 	['  ', '  ', '  ', '  ', '  '].forEach((cardValue) => {
 		var cardDomElement = PokerHand.CardDomElement.create(cardValue)
+		communityCardDomElements.push(cardDomElement)
 		document.querySelector('#communityCardsID').appendChild(cardDomElement)
 		cardDomElement.addEventListener('click', function () {
-			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
-				cardDomElement.dataset.cardValue = newCardSelected
-				PokerHand.CardDomElement.update(cardDomElement)
-				onHandChange()
-			})
+			onCardDomElementClick(cardDomElement, onHandChange)
+			// PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
+			// 	cardDomElement.dataset.cardValue = newCardSelected
+			// 	PokerHand.CardDomElement.update(cardDomElement)
+			// 	onHandChange()
+			// })
 		})
 	});
 	['  ', '  '].forEach((cardValue) => {
 		var cardDomElement = PokerHand.CardDomElement.create(cardValue)
+		holeCardDomElements.push(cardDomElement)
 		document.querySelector('#holeCardsID').appendChild(cardDomElement)
 		cardDomElement.addEventListener('click', function () {
-			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
-				cardDomElement.dataset.cardValue = newCardSelected
-				PokerHand.CardDomElement.update(cardDomElement)
-				onHandChange()
-			})
+			onCardDomElementClick(cardDomElement, onHandChange)
+			// PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
+			// 	cardDomElement.dataset.cardValue = newCardSelected
+			// 	PokerHand.CardDomElement.update(cardDomElement)
+			// 	onHandChange()
+			// })
 		})
 	})
 
-	function resetCardDomElements(){
+	function resetCardDomElements() {
 		let communityDomElements = Array.from(document.querySelectorAll('#communityCardsID .card'))
 		let holeDomElements = Array.from(document.querySelectorAll('#holeCardsID .card'))
 
 		let cardDomElements = holeDomElements.concat(communityDomElements)
-		for(let cardDomElement of cardDomElements){
+		for (let cardDomElement of cardDomElements) {
 			cardDomElement.dataset.cardValue = '  '
 			PokerHand.CardDomElement.update(cardDomElement)
 		}
@@ -109,8 +124,16 @@
 	////////////////////////////////////////////////////////////////////////
 	//		Code
 	////////////////////////////////////////////////////////////////////////
-	
+
 	document.querySelector('#newHandID').addEventListener('click', function () {
+		resetCardDomElements()
+		onCardDomElementClick(holeCardDomElements[0], function(){
+			onCardDomElementClick(holeCardDomElements[1], function(){
+				onHandChange()
+			})
+		})
+	})
+	document.querySelector('#resetHandID').addEventListener('click', function () {
 		resetCardDomElements()
 		onHandChange()
 	})
@@ -149,9 +172,9 @@
 	////////////////////////////////////////////////////////////////////////
 	//		Code
 	////////////////////////////////////////////////////////////////////////
-	
 
-	function displayMyHandName(){
+
+	function displayMyHandName() {
 		// get holdCards + communityCards from UI
 		let holeCards = Array.from(document.querySelectorAll('#holeCardsID .card'))
 			.filter((domElement) => domElement.dataset.cardValue !== '  ')
@@ -240,8 +263,8 @@
 		// display #OutOddsPercentID
 		let nUnseenCards = 52 - holeCards.length - communityCards.length
 		let OutOdds = outCards.length / nUnseenCards
-		let OutOddsRatio = Math.round( (nUnseenCards - outCards.length) / outCards.length ) + ':1' 
-		document.querySelector('#OutOddsPercentID').innerHTML = (OutOdds*100).toFixed(2) + '%'
+		let OutOddsRatio = Math.round((nUnseenCards - outCards.length) / outCards.length) + ':1'
+		document.querySelector('#OutOddsPercentID').innerHTML = (OutOdds * 100).toFixed(2) + '%'
 		document.querySelector('#OutOddsRatioID').innerHTML = OutOddsRatio
 
 	}
@@ -293,7 +316,7 @@
 		}
 
 		// console.time('simulateOddsIfAllIn')
-		let oddsIfAllInValue = PokerHand.MonteCarlo.simulateOddsIfAllIn(bestOddsIfAllInStepRounds, holeCards, communityCards, nbPlayers-1)
+		let oddsIfAllInValue = PokerHand.MonteCarlo.simulateOddsIfAllIn(bestOddsIfAllInStepRounds, holeCards, communityCards, nbPlayers - 1)
 		// console.timeEnd('simulateOddsIfAllIn')
 		// console.log('oddsIfAllInValue', oddsIfAllInValue)
 
