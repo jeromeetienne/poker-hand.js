@@ -17,7 +17,15 @@
 	<input type="button" value="New Hand" id='newHandID' style='zoom: 150%;'>
 	<input type="button" value="New Flop Cards" id='newFlopCardsID' style='zoom: 150%;'>
 	<!-- ====================== -->
-	<br>
+	<br/>
+	<br/>
+	<label>
+		<strong>Nb Players:</strong>
+		<input type="number" id="nbPlayersID" min='2' max='22' value='2' />
+	</label>
+	<input type="button" value="-" id='nbPlayersLessID' style='zoom: 150%;' />
+	<input type="button" value="+" id='nbPlayersMoreID' style='zoom: 150%;' />
+	<br/>
 	<br>
 	<input type="button" value="Reset Hand" id='resetHandID'>
 
@@ -30,12 +38,6 @@
 		- requiredHandRank <select id="outsRequiredHandRankID"></select>
 	</h3>
 
-	<label>
-		Nb Players:
-		<input type="number" id="nbPlayersID" min='2' max='22' value='2' />
-	</label>
-	<input type="button" value="-" id='nbPlayersLessID' />
-	<input type="button" value="+" id='nbPlayersMoreID' />
 	<br />
 
 	<!-- html for card selection -->
@@ -124,9 +126,9 @@
 
 	document.querySelector('#newFlopCardsID').addEventListener('click', function () {
 		let cardDomElements = [
-		communityCardDomElements[0],
-		communityCardDomElements[1],
-		communityCardDomElements[2],
+			communityCardDomElements[0],
+			communityCardDomElements[1],
+			communityCardDomElements[2],
 		]
 		resetCardDomElements2(cardDomElements)
 		onCardDomElementClick('Community Card #1', communityCardDomElements[0], function () {
