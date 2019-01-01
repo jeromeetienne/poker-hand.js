@@ -1,4 +1,4 @@
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, user-scalable=no">
 <style>
 	body {
 		background-color: green;
@@ -16,7 +16,7 @@
 	<br/>
 	<br/>
 	
-	<input type="button" value="Reset hand" id='resetHandID'>
+	<input type="button" value="new hand" id='newHandID'>
 
 	<h2>Hand name <span id='myHandNameID'>?</span></h2>
 
@@ -31,7 +31,9 @@
 	<h2>Parameters</h2>
 	<label>
 		n other players:
-		<input type="number" id="nOtherPlayersID" min='2' max='22' value='2'>
+		<input type="number" id="nOtherPlayersID" min='2' max='22' value='2'/>
+		<input type="button" value="+" id='nOtherPlayersMoreID'/>
+		<input type="button" value="-" id='nOtherPlayersLessID'/>
 	</label>
 	<br/>
 
@@ -90,7 +92,6 @@
 		cardDomElement.addEventListener('click', function () {
 			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
 				cardDomElement.dataset.cardValue = newCardSelected
-				console.log('newCardSelected', newCardSelected)
 				PokerHand.CardDomElement.update(cardDomElement)
 				onHandChange()
 			})
@@ -112,11 +113,29 @@
 	//		Code
 	////////////////////////////////////////////////////////////////////////
 	
-	document.querySelector('#resetHandID').addEventListener('click', function () {
+	document.querySelector('#newHandID').addEventListener('click', function () {
 		resetCardDomElements()
 		onHandChange()
 	})
 	document.querySelector('#nOtherPlayersID').addEventListener('change', function () {
+		onHandChange()
+	})
+	document.querySelector('#nOtherPlayersMoreID').addEventListener('click', function () {
+		let nbOtherPlayers = parseInt(document.querySelector('#nOtherPlayersID').value)
+		nbOtherPlayers += 1
+		nbOtherPlayers = Math.min(22, nbOtherPlayers)
+		nbOtherPlayers = Math.max(2, nbOtherPlayers)
+		document.querySelector('#nOtherPlayersID').value = nbOtherPlayers
+
+		onHandChange()
+	})
+	document.querySelector('#nOtherPlayersLessID').addEventListener('click', function () {
+		let nbOtherPlayers = parseInt(document.querySelector('#nOtherPlayersID').value)
+		nbOtherPlayers -= 1
+		nbOtherPlayers = Math.min(22, nbOtherPlayers)
+		nbOtherPlayers = Math.max(2, nbOtherPlayers)
+		document.querySelector('#nOtherPlayersID').value = nbOtherPlayers
+
 		onHandChange()
 	})
 
@@ -213,12 +232,12 @@
 		if (requiredHandRank === -1) {
 			requiredHandRank = firstHand.handRank + 1
 		}
-		console.log(`firstHand ${firstHand.minimalCards} name ${firstHand.handName} rank ${firstHand.handRank}`)
-		console.log('requiredHandRank', requiredHandRank)
+		// console.log(`firstHand ${firstHand.minimalCards} name ${firstHand.handName} rank ${firstHand.handRank}`)
+		// console.log('requiredHandRank', requiredHandRank)
 
 		// display outCards
 		let outCards = PokerHand.Utils.computeOutCards(holeCards, communityCards, requiredHandRank, nSimulations)
-		console.log(`nOuts ${outCards.length} outCards ${outCards}`)
+		// console.log(`nOuts ${outCards.length} outCards ${outCards}`)
 		document.querySelector('#nOutsID').innerHTML = outCards.length
 		document.querySelector('#OutCardsID').innerHTML = outCards
 
@@ -257,8 +276,9 @@
 	let bestOddsIfAllInValue = 0
 	let bestOddsIfAllInNRounds = 0
 	let bestOddsIfAllInStepRounds = 50
-	let bestOddsIfAllInMaxNRounds = 10000
+	let bestOddsIfAllInMaxNRounds = 30000
 	function computeOddsIfAllIn() {
+		// if it is already fully computed, return immediatly
 		if (bestOddsIfAllInNRounds >= bestOddsIfAllInMaxNRounds) return
 
 
@@ -268,7 +288,8 @@
 		let communityCards = Array.from(document.querySelectorAll('#communityCardsID .card'))
 			.filter((domElement) => domElement.dataset.cardValue !== '  ')
 			.map((domElement) => domElement.dataset.cardValue)
-		let nbOtherPlayers = document.querySelector('#nOtherPlayersID').value
+		let nbOtherPlayers = parseInt(document.querySelector('#nOtherPlayersID').value)
+
 
 		if (holeCards.length < 2) {
 			// console.log('not enougth holeCards')
@@ -282,7 +303,6 @@
 
 
 		if (bestOddsIfAllInNRounds === 0) {
-			console.log('init bestOddsIfAllInValue')
 			bestOddsIfAllInValue = oddsIfAllInValue
 			bestOddsIfAllInNRounds = bestOddsIfAllInStepRounds
 		} else {
