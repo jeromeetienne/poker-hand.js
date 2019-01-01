@@ -111,9 +111,9 @@
 		let communityDomElements = Array.from(document.querySelectorAll('#communityCardsID .card'))
 		let holeDomElements = Array.from(document.querySelectorAll('#holeCardsID .card'))
 		let cardDomElements = holeDomElements.concat(communityDomElements)
-		resetCardDomElements2(cardDomElements)
+		resetCardDomElements(cardDomElements)
 	}
-	function resetCardDomElements2(cardDomElements) {
+	function resetCardDomElements(cardDomElements) {
 		for (let cardDomElement of cardDomElements) {
 			cardDomElement.dataset.cardValue = '  '
 			PokerHand.CardDomElement.update(cardDomElement)
@@ -130,7 +130,7 @@
 			communityCardDomElements[1],
 			communityCardDomElements[2],
 		]
-		resetCardDomElements2(cardDomElements)
+		resetCardDomElements(cardDomElements)
 		onCardDomElementClick('Flop Card #1', communityCardDomElements[0], function () {
 			onCardDomElementClick('Flop Card #2', communityCardDomElements[1], function () {
 				onCardDomElementClick('Flop Card #3', communityCardDomElements[2], function () {
@@ -140,11 +140,7 @@
 		})
 	})
 	document.querySelector('#newHandID').addEventListener('click', function () {
-		let cardDomElements = [
-			holeCardDomElements[0],
-			holeCardDomElements[1],
-		]
-		resetCardDomElements2(cardDomElements)
+		resetAllCardDomElements()
 		onCardDomElementClick('Hole Card #1', holeCardDomElements[0], function () {
 			onCardDomElementClick('Hole Card #2', holeCardDomElements[1], function () {
 				onHandChange()
