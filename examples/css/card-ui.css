@@ -4,7 +4,7 @@
 	position: relative;
 	border-radius: 20px;
 	width: 100px;
-	height: 150px;
+	height: 160px;
 	margin: 10px;
 	display: inline-block;
 	text-align: center;
@@ -15,7 +15,7 @@
 }
 
 .card .denomination {
-	top: 10px;
+	top: 5px;
 	font-weight: bolder;
 	font-family: arial;
 	position: absolute;
@@ -24,7 +24,7 @@
 }
 
 .card .suit {
-	bottom: 10px;
+	bottom: 0px;
 	font-weight: bolder;
 	font-family: arial;
 	position: absolute;

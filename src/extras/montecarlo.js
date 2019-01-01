@@ -13,6 +13,7 @@ import Utils from './utils.js'
 
 /**
  * - Good link https://www.cardschat.com/poker-starting-hands.php#twocards
+ * - links to check result - https://www.cardschat.com/poker-starting-hands-percentage.php
  */
 function simulateOddsIfAllIn(nbRounds, holeCards, communityCards, nbOtherPlayers) {
 	var result = 0
