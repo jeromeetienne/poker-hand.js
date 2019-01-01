@@ -14,9 +14,12 @@
 	<div id='holeCardsID'></div>
 	<br />
 
+	<input type="button" value="New Hand" id='newHandID' style='zoom: 200%;'>
+	<input type="button" value="New Flop Cards" id='newFlopCardsID' style='zoom: 200%;'>
+	<!-- ====================== -->
+	<br>
+	<br>
 	<input type="button" value="Reset Hand" id='resetHandID'>
-	<input type="button" value="New Hand" id='newHandID'>
-	<input type="button" value="New Flop" id='newFlopID'>
 
 	<h2>Hand name <span id='myHandNameID'>?</span></h2>
 
@@ -104,11 +107,13 @@
 		})
 	})
 
-	function resetCardDomElements() {
+	function resetAllCardDomElements() {
 		let communityDomElements = Array.from(document.querySelectorAll('#communityCardsID .card'))
 		let holeDomElements = Array.from(document.querySelectorAll('#holeCardsID .card'))
-
 		let cardDomElements = holeDomElements.concat(communityDomElements)
+		resetCardDomElements2(cardDomElements)
+	}
+	function resetCardDomElements2(cardDomElements) {
 		for (let cardDomElement of cardDomElements) {
 			cardDomElement.dataset.cardValue = '  '
 			PokerHand.CardDomElement.update(cardDomElement)
@@ -119,8 +124,13 @@
 	//		Code
 	////////////////////////////////////////////////////////////////////////
 
-	document.querySelector('#newFlopID').addEventListener('click', function () {
-		resetCardDomElements()
+	document.querySelector('#newFlopCardsID').addEventListener('click', function () {
+		let cardDomElements = [
+		communityCardDomElements[0],
+		communityCardDomElements[1],
+		communityCardDomElements[2],
+		]
+		resetCardDomElements2(cardDomElements)
 		onCardDomElementClick('Community Card #1', communityCardDomElements[0], function () {
 			onCardDomElementClick('Community Card #2', communityCardDomElements[1], function () {
 				onCardDomElementClick('Community Card #3', communityCardDomElements[2], function () {
@@ -130,7 +140,11 @@
 		})
 	})
 	document.querySelector('#newHandID').addEventListener('click', function () {
-		resetCardDomElements()
+		let cardDomElements = [
+			holeCardDomElements[0],
+			holeCardDomElements[1],
+		]
+		resetCardDomElements2(cardDomElements)
 		onCardDomElementClick('Hole Card #1', holeCardDomElements[0], function () {
 			onCardDomElementClick('Hole Card #2', holeCardDomElements[1], function () {
 				onHandChange()
@@ -138,7 +152,7 @@
 		})
 	})
 	document.querySelector('#resetHandID').addEventListener('click', function () {
-		resetCardDomElements()
+		resetAllCardDomElements()
 		onHandChange()
 	})
 	document.querySelector('#nbPlayersID').addEventListener('change', function () {
