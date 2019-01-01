@@ -3,7 +3,7 @@
  * @param {*} currentCard 
  * @param {*} onSelected 
  */
-function cardSelectionStart(currentCard, onSelected) {
+function cardSelectionModal(title, currentCard, onSelected) {
 	showSelector()
 	addEventListeners()
 	showHighLight(currentCard)
@@ -20,8 +20,8 @@ function cardSelectionStart(currentCard, onSelected) {
 	return
 
 	function showSelector() {
+		document.querySelector('#cardSelectionID .titleSelection').innerHTML = title;
 		document.querySelector('#cardSelectionID').style.display = 'block';
-
 	}
 	function hideSelector() {
 		document.querySelector('#cardSelectionID').style.display = 'none';
@@ -114,5 +114,5 @@ function cardSelectionStart(currentCard, onSelected) {
 ////////////////////////////////////////////////////////////////////////
 
 export default {
-	modal: cardSelectionStart
+	modal: cardSelectionModal
 }

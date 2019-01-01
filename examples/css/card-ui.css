@@ -33,6 +33,13 @@
 
 }
 
+
+/* =================================================================================== */
+/* =================================================================================== */
+/* =================================================================================== */
+/* =================================================================================== */
+/* =================================================================================== */
+
 #cardSelectionID {
 	position: absolute;
 	top: 0px;
@@ -42,42 +49,36 @@
 	user-select: none;
 	-moz-user-select: none;
 }
-#cardSelectionID .denominationSelection div
+
+#cardSelectionID .titleSelection {
+	font-size: 400%;
+	font-weight: bolder;
+	text-align: center;
+}
+
+#cardSelectionID .denominationSelection div,
+#cardSelectionID .suitSelection div
 {
-	background-color: #eee;
-	border-color: black;
-	border: solid 2px;
 	position: relative;
-	width: 150px;
-	line-height: 200%;
-	margin: 10px;
 	display: inline-block;
 
-
-	border-radius: 10px;
-	font-size: 500%;
-	    font-weight: bolder;
-	    text-align: center;
-}
-#cardSelectionID .suitSelection div {
-	background-color: #eee;
-	border: solid 2px;
-	border-color: black;
-	position: relative;
-	width: 150px;
-	line-height: 200%;
+	width: 130px;
+	line-height: 130px;
 	margin: 10px;
-	display: inline-block;
+
+	font-size: 500%;
+	font-weight: bolder;
+	text-align: center;
+
+	background-color: #eee;
+	border-style: solid;
+	border-width: 2px;
+	border-color: black;
 
 	border-radius: 10px;
-	font-size: 500%;
-	    font-weight: bolder;
-	    text-align: center;
 }
 
-#cardSelectionID [data-card-denomination].selected {
-	background-color: #aaa;
-}
+#cardSelectionID [data-card-denomination].selected,
 #cardSelectionID [data-card-suit].selected {
 	background-color: #aaa;
 }

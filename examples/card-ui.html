@@ -6,7 +6,7 @@
 		font-family: arial;
 	}
 </style>
-<link rel="stylesheet" href="css/card-ui.css"/>
+<link rel="stylesheet" href="css/card-ui.css" />
 
 <body>
 	<h2>Basic Demo Cards</h2>
@@ -15,6 +15,7 @@
 
 	<!-- html for card selection -->
 	<div id='cardSelectionID' style='display: none'>
+		<div class='titleSelection'>No Title</div>
 		<div class='denominationSelection'>
 			<div data-card-denomination='2'>2</div>
 			<div data-card-denomination='3'>3</div>
@@ -43,12 +44,11 @@
 <script type='module'>
 	import PokerHand from '../src/index.js'
 
-
-	['  ', '  ', '  ', '  ', '  '].forEach((cardValue) => {
+	['  ', '  ', '  ', '  ', '  '].forEach((cardValue, cardIndex) => {
 		var cardDomElement = PokerHand.CardDomElement.create(cardValue)
 		document.querySelector('#CardsID').appendChild(cardDomElement)
 		cardDomElement.addEventListener('click', function () {
-			PokerHand.CardUISelection.modal(cardDomElement.dataset.cardValue, function (newCardSelected) {
+			PokerHand.CardUISelection.modal(`Card #${cardIndex+1}`, cardDomElement.dataset.cardValue, function (newCardSelected) {
 				// update cardDomElement cardValue
 				cardDomElement.dataset.cardValue = newCardSelected
 				PokerHand.CardDomElement.update(cardDomElement)
